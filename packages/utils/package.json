@@ -16,12 +16,6 @@
     "test": "vitest",
     "clean": "rm -rf dist"
   },
-  "keywords": [
-    "utils",
-    "helpers"
-  ],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@campus/types": "workspace:*"
   },

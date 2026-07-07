@@ -1,0 +1,11 @@
+# 依赖文件夹
+node_modules
+# 编译输出产物
+dist
+build
+output
+# 类型文件
+*.d.ts
+# 缓存目录
+.turbo
+.husky

@@ -1,1 +1,1 @@
-export type{ MenuItem, AdminRole } from "./menuType";
+export type { MenuItem, AdminRole } from './menuType'

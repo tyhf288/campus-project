@@ -2,6 +2,7 @@
   "name": "@campus/types",
   "version": "1.0.0",
   "description": "Shared TypeScript types for the monorepo",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -15,12 +16,9 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "clean": "rm -rf dist"
   },
-  "keywords": [
-    "typescript",
-    "types"
-  ],
-  "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "@campus/eslint-config": "workspace:*"
+  },
   "devDependencies": {
     "tsup": "^8.5.1"
   }
