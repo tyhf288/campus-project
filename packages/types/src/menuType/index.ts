@@ -10,5 +10,6 @@ interface MenuItem {
   };
   children?: MenuItem[];
 }
+const a =1
 
 export type { AdminRole, MenuItem };
