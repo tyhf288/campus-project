@@ -1,0 +1,21 @@
+//布局变量
+$aside-width : 210px;
+$header-height: 84px;
+$nav-height: 43px;
+
+
+
+//导航颜色
+$menuText : #bfcbd9;
+//导航激活颜色
+$menuTextActive : #409eff;
+//菜单背景颜色
+$menuBg : #304156;
+
+
+:export {
+  menuText: $menuText;
+  menuTextActive: $menuTextActive;
+  menuBg: $menuBg;
+
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@campus/utils",
+  "version": "1.0.0",
+  "description": "Shared utility functions for the monorepo",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "test": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "utils",
+    "helpers"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@campus/types": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "vitest": "^4.1.10"
+  }
+}

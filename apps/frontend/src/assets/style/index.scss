@@ -1,0 +1,8 @@
+@import "./variables.module.scss";
+
+:root {
+  //侧边栏宽度
+  --aside-width: #{$aside-width};
+  --header-height: #{$header-height};
+  --nav-height: #{$nav-height};
+}

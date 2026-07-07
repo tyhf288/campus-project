@@ -1,0 +1,1 @@
+export { filterMenuByRoute } from "./filterMenuByRoute";
