@@ -1,0 +1,60 @@
+# 流水线展示名称
+name: CI 代码校验流水线
+
+# 触发条件：两种场景自动运行
+on:
+  # 1. 本地push代码到远程分支（dev、main）
+  push:
+    branches: [dev, main]
+  # 2. 提交PR合并到dev/main分支（最核心卡点）
+  pull_request:
+    branches: [dev, main]
+
+# 全局统一环境变量，统一node、pnpm版本
+env:
+  NODE_VERSION: 20
+  PNPM_VERSION: 11
+
+# 流水线任务
+jobs:
+  ci-check:
+    # 使用GitHub提供的Ubuntu云服务器运行
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤1：拉取仓库完整代码
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # 步骤2：安装指定版本pnpm
+      - name: 安装PNPM包管理器
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      # 步骤3：配置Node环境 + 自动缓存依赖（大幅提速）
+      - name: 配置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm' # 自动缓存node_modules，下次不用重装
+
+      # 步骤4：配置国内npm镜像，解决国外下载慢
+      - name: 切换淘宝镜像加速
+        run: pnpm config set registry https://registry.npmmirror.com
+
+      # 步骤5：安装依赖，严格锁定lock文件，保证线上本地依赖完全一致
+      - name: 安装项目依赖
+        run: pnpm install --frozen-lockfile
+
+      # ========== CI三大核心校验步骤 ==========
+      # 校验1：全项目ESLint代码规范检查（turbo批量校验所有apps、packages）
+      - name: ESLint 代码规范校验
+        run: pnpm lint
+
+      # 校验2：TS全量类型检查，只校验不打包，提前拦截类型错误
+      - name: TS 类型全量检查
+        run: pnpm type-check
+
+      # 校验3：完整打包构建，验证nest build可以正常编译，避免线上打包失败
+      - name: 项目打包验证
+        run: pnpm build

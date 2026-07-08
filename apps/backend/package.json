@@ -10,7 +10,8 @@
   "scripts": {
     "build": "nest build",
     "lint:format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "lint:fix":"eslint src/**/*.ts --fix --quiet",
+    "lint:fix": "eslint src/**/*.ts --fix --quiet",
+    "type-check": "tsc --noEmit",
     "start": "nest start",
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

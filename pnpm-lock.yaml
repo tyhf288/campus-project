@@ -207,11 +207,14 @@ importers:
 
   .:
     devDependencies:
+      '@campus/eslint-config':
+        specifier: workspace:*
+        version: link:packages/eslint-config
       '@commitlint/cli':
-        specifier: ^21.1.0
+        specifier: ^21.2.0
         version: 21.2.0(@types/node@24.13.2)(typescript@5.7.2)
       '@commitlint/config-conventional':
-        specifier: ^21.1.0
+        specifier: ^21.2.0
         version: 21.2.0
       '@cspell/dict-lorem-ipsum':
         specifier: ^4.0.5
@@ -235,7 +238,7 @@ importers:
         specifier: ^17.0.8
         version: 17.0.8
       prettier:
-        specifier: ^3.4.2
+        specifier: ^3.9.4
         version: 3.9.4
       turbo:
         specifier: ^2.10.4
