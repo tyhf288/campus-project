@@ -1,4 +1,4 @@
-import type { MenuItem, AdminRole } from '@campus/types';
+import type { MenuItem, AdminRole } from '@campus/types'
 
 /**
  * 根据角色过滤菜单
@@ -7,21 +7,21 @@ import type { MenuItem, AdminRole } from '@campus/types';
  * @returns 过滤后的菜单数组
  */
 export const filterMenuByRoute = (menu: MenuItem[], role: AdminRole): MenuItem[] => {
-  const filteredMenu: MenuItem[] = [];
-  
+  const filteredMenu: MenuItem[] = []
+
   menu.forEach((item) => {
     if (item.children && item.children.length > 0) {
-      const childMenu = filterMenuByRoute(item.children, role);
+      const childMenu = filterMenuByRoute(item.children, role)
       filteredMenu.push({
         ...item,
-        children: childMenu
-      });
+        children: childMenu,
+      })
     } else {
       if (item.meta.roles.includes(role)) {
-        filteredMenu.push(item);
+        filteredMenu.push(item)
       }
     }
-  });
-  
-  return filteredMenu;
-};
+  })
+
+  return filteredMenu
+}

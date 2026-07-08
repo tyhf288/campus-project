@@ -41,5 +41,8 @@ temp/
 # Husky
 .husky/_
 
+# Turbo 本地缓存
+.turbo/cache/
+
 # Commitlint
 .commitlintrc.json

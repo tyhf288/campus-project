@@ -1,1 +1,1 @@
-export { filterMenuByRoute } from "./filterMenuByRoute";
+export { filterMenuByRoute } from './filterMenuByRoute'
