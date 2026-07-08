@@ -12,7 +12,7 @@ on:
 
 # 全局统一环境变量，统一node、pnpm版本
 env:
-  NODE_VERSION: 20
+  NODE_VERSION: 22
   PNPM_VERSION: 11
 
 # 流水线任务
