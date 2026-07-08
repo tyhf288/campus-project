@@ -49,7 +49,7 @@ jobs:
       # ========== CI三大核心校验步骤 ==========
       # 校验1：全项目ESLint代码规范检查（turbo批量校验所有apps、packages）
       - name: ESLint 代码规范校验
-        run: pnpm lint
+        run: pnpm lint:fix
 
       # 校验2：TS全量类型检查，只校验不打包，提前拦截类型错误
       - name: TS 类型全量检查
