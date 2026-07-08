@@ -5,8 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint src/**/*.ts src/**/*.vue --quiet",
     "lint:fix": "eslint src/**/*.ts src/**/*.vue --fix --quiet",
+    "lint:format": "prettier --write \"src/**/*.ts\" \"src/**/*.vue\"",
     "dev": "vite --open",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
