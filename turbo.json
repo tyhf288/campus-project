@@ -11,6 +11,10 @@
     "lint:fix": {
       "cache": false
     },
+    "type-check": {
+      "cache": false,
+      "dependsOn": ["^build"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
