@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@campus/utils",
   "version": "1.0.0",
   "description": "Shared utility functions for the monorepo",
@@ -17,7 +18,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@campus/types": "workspace:*"
+    "@campus/types": "workspace:*",
+    "@campus/eslint-config": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.5.1",

@@ -22,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import type { MenuItem } from '@canpus/types';
-import Menu from './menu.vue';
+import type { MenuItem } from '@campus/types'
+import Menu from './menu.vue'
 
 defineProps<{
-  item: MenuItem;
-}>();
+  item: MenuItem
+}>()
 </script>
 <style scoped lang="scss">
 :deep(.el-menu-item.is-active) {

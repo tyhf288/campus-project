@@ -1,5 +1,5 @@
-import type { App } from "vue"
-import { ElMessage, ElNotification, ElMessageBox } from "element-plus"
+import type { App } from 'vue'
+import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 export default (app: App) => {
   app.config.globalProperties.$message = ElMessage
