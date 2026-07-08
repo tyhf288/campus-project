@@ -9,7 +9,12 @@ export default defineConfig({
   dts: {
     compilerOptions: {
       composite: false,
-      baseUrl: undefined,
+      moduleResolution: 'bundler',
+      skipLibCheck: true,
+      target: 'ES2020',
+      module: 'ESNext',
+      esModuleInterop: true,
+      forceConsistentCasingInFileNames: true,
     },
   },
   // 打包前清空dist文件夹
