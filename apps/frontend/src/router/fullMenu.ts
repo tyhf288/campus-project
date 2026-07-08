@@ -1,4 +1,4 @@
-import type { MenuItem } from '@canpus/types';
+import type { MenuItem } from '@campus/types'
 
 export const fullMenu: MenuItem[] = [
   {
@@ -42,4 +42,4 @@ export const fullMenu: MenuItem[] = [
       },
     ],
   },
-];
+]

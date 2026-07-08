@@ -1,8 +1,20 @@
-@import "./variables.module.scss";
+@use "../../assets/style/variables.module.scss" as *;
 
+* {
+  box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 :root {
+
   //侧边栏宽度
   --aside-width: #{$aside-width};
   --header-height: #{$header-height};
   --nav-height: #{$nav-height};
+  --nav-padding: #{$nav-padding};
+  --nav-tag-height: #{$nav-tag-height};
+  --el-menu-text-color:#{$menuTexts}
 }

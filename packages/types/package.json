@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@campus/types",
   "version": "1.0.0",
   "description": "Shared TypeScript types for the monorepo",

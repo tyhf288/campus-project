@@ -39,7 +39,7 @@ export default [
       ecmaVersion: "latest", // 支持最新ES语法
       sourceType: "module", // 全局使用ESM模块规范
       // 外层解析器，处理vue单文件
-      parser: vue.parser,
+      parser: (await import("vue-eslint-parser")).default,
       parserOptions: {
         // vue内部ts解析器
         parser: tseslint.parser,
@@ -54,7 +54,7 @@ export default [
       },
     },
 
-    // 自定义校验规则：off关闭 warn警告 error报错
+    // 自定义校验规则：off 关闭 warn警告 error报错
     rules: {
       // ========== TS 规则 ==========
       // 允许any类型，仅警告不阻断开发
@@ -73,6 +73,11 @@ export default [
       "vue/multi-word-component-names": "off",
       // 不允许v-html
       "vue/no-v-html": "error",
+      // 允许自闭合标签和普通标签两种写法
+      "vue/html-self-closing": "off",
+      // 关闭强制标签闭合风格
+      "vue/html-closing-bracket-newline": "off",
+      "vue/html-closing-bracket-spacing": "off",
 
       // ========== JS 通用规则 ==========
       // console仅保留warn/error，普通log警告提示
