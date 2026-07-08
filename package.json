@@ -5,7 +5,10 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint:format": "turbo lint:format",
+    "lint:fix": "turbo lint:fix",
+    "dev": "turbo dev",
+    "build": "turbo build"
   },
   "devEngines": {
     "packageManager": {
@@ -25,6 +28,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
     "prettier": "^3.4.2",
+    "turbo": "^2.10.4",
     "typescript": "~5.7.0"
   }
 }
