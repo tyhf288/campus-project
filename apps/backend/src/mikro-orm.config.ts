@@ -1,5 +1,5 @@
-import { Options, PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
+import { Options, PostgreSqlDriver } from '@mikro-orm/postgresql'
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 
 const config: Options = {
   //使用PostgreSQL数据库
@@ -24,13 +24,13 @@ const config: Options = {
     snapshot: true, // 是否生成快照
   },
   seeder: {
-    path: './src/seeders', // 种子文件存放路径
-    pathTs: undefined, // TypeScript 种子文件路径（如果使用，应将编译后的文件路径放在 `path` 中）
+    path: './dist/seeders', // 种子文件存放路径（编译后）
+    pathTs: './src/seeders', // TypeScript 种子文件路径
     defaultSeeder: 'DatabaseSeeder', // 默认种子类名称
     glob: '!(*.d).{js,ts}', // 种子文件匹配规则（所有 .js 和 .ts 文件，但不包括 .d.ts）
     emit: 'ts', // 种子文件生成模式
     fileName: (className: string) => className, // 种子文件命名约定
   },
-};
+}
 
-export default config;
+export default config
