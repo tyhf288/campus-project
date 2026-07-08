@@ -246,6 +246,15 @@ importers:
 
   apps/backend:
     dependencies:
+      '@campus/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@campus/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@campus/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@mikro-orm/cli':
         specifier: ^6.6.15
         version: 6.6.15(pg@8.20.0)

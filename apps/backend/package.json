@@ -5,12 +5,14 @@
   "description": "",
   "author": "",
   "private": true,
+  "type": "commonjs",
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint:format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint:fix":"eslint src/**/*.ts --fix --quiet",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "test": "jest",
@@ -36,7 +38,10 @@
     "class-validator": "^0.15.1",
     "dotenv": "^17.4.2",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "@campus/types": "workspace:*",
+    "@campus/utils": "workspace:*",
+    "@campus/eslint-config": "workspace:*"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.5.0",
