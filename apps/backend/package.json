@@ -8,19 +8,21 @@
   "type": "commonjs",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "nest build ",
     "lint:format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint:fix": "eslint src/**/*.ts --fix --quiet",
     "type-check": "tsc --noEmit",
     "start": "nest start",
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main",
+    "start:prod": "node -r dotenv/config dist/src/main",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migration:create": "mikro-orm migration:create",
+    "migration:fresh": "mikro-orm migration:fresh --seed"
   },
   "dependencies": {
     "@mikro-orm/cli": "^6.6.15",

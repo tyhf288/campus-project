@@ -12,15 +12,15 @@ export default {
   // 换行宽度，超过自动折行
   printWidth: 100,
   // 对象数组最后一项添加逗号
-  trailingComma: "es5",
+  trailingComma: 'es5',
   // html标签换行规则
-  htmlWhitespaceSensitivity: "css",
+  htmlWhitespaceSensitivity: 'css',
   // 箭头函数参数始终带括号
-  arrowParens: "always",
+  arrowParens: 'always',
   // 换行符统一lf
-  endOfLine: "lf",
+  endOfLine: 'lf',
   // vue文件script/style标签缩进
   vueIndentScriptAndStyle: false,
   // 格式化时不自动修改引号
-  quoteProps: "as-needed",
-};
+  quoteProps: 'as-needed',
+}

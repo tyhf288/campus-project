@@ -1,6 +1,6 @@
-import vue from "eslint-plugin-vue";
-import tseslint from "typescript-eslint";
-import prettier from "eslint-plugin-prettier";
+import vue from 'eslint-plugin-vue'
+import tseslint from 'typescript-eslint'
+import prettier from 'eslint-plugin-prettier'
 
 /**
  * ESLint 扁平配置（Flat Config ESLint9+）
@@ -64,7 +64,6 @@ export default [
       // 不强制全文件使用 ESM 的 export
       '@typescript-eslint/prefer-default-export': 'off',
 
-
       // ========== TS 规则 ==========
       // 允许any类型，仅警告不阻断开发
       '@typescript-eslint/no-explicit-any': 'warn',
@@ -91,9 +90,11 @@ export default [
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       // 禁止未使用普通js变量（交给ts规则接管，关闭）
       'no-unused-vars': 'off',
+      // 允许多个连续空行
+      'no-multiple-empty-lines': 'off',
 
       // ========== Prettier 整合规则 ==========
-      // 格式化不符合规范直接报warn，自动可修复
+      // 格式化不符合规范直接报warn，自动可修复（统一格式化检查）
       'prettier/prettier': 'warn',
     },
   },
