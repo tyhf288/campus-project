@@ -20,19 +20,27 @@
     }
   },
   "devDependencies": {
+    "@campus/eslint-config": "workspace:*",
     "@commitlint/cli": "^21.2.0",
     "@commitlint/config-conventional": "^21.2.0",
     "@cspell/dict-lorem-ipsum": "^4.0.5",
     "@eslint/js": "^10.0.1",
+    "commitizen": "^4.3.2",
     "cspell": "^10.0.1",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^10.6.0",
+    "git-cz": "^4.9.0",
     "globals": "^17.7.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
     "prettier": "^3.9.4",
     "turbo": "^2.10.4",
-    "typescript": "~5.7.0",
-    "@campus/eslint-config": "workspace:*"
+    "typescript": "~5.7.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   },
   "lint-staged": {
     "*.{ts,js,tsx}": [
