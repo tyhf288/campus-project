@@ -18,6 +18,7 @@ export class TodosService {
   async create(createTodoDto: CreateTodoDto) {
     const todo = this.todoRepository.create(createTodoDto)
     await this.em.flush()
+
     return todo
   }
 

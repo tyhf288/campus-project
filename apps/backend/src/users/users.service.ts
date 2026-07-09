@@ -1,23 +1,39 @@
 import { Injectable } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { User } from './entities/user.entity'
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql'
+import { InjectRepository } from '@mikro-orm/nestjs'
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user'
+  constructor(
+    private readonly em: EntityManager,
+    @InjectRepository(User)
+    private readonly userRepository: EntityRepository<User>
+  ) {}
+  async create(createUserDto: CreateUserDto) {
+    const user = this.userRepository.create(createUserDto as any)
+    await this.em.flush()
+    return user
   }
 
   findAll() {
-    return `This action returns all users`
+    return this.userRepository.findAll()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`
+    return this.userRepository.findOne(id)
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.findOne(id)
+    if (!user) {
+      throw new Error('用户不存在')
+    }
+    this.em.assign(user, updateUserDto)
+    await this.em.flush()
+    return user
   }
 
   remove(id: number) {
