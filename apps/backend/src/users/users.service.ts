@@ -22,8 +22,8 @@ export class UsersService {
     return this.userRepository.findAll()
   }
 
-  findOne(id: number) {
-    return this.userRepository.findOne(id)
+  async findOne(loginKey: string) {
+    return await this.userRepository.findOne({ loginKey: loginKey })
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

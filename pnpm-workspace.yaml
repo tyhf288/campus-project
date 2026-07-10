@@ -1,1 +1,12 @@
-{ packages: [ "packages/*", "apps/*" ], allowBuilds: { '@parcel/watcher': true, "@scarf/scarf": true, "@swc/core": true, esbuild: true, unrs-resolver: true } }
+{
+  packages: ['packages/*', 'apps/*'],
+  allowBuilds:
+    {
+      '@parcel/watcher': true,
+      '@scarf/scarf': true,
+      '@swc/core': true,
+      esbuild: true,
+      unrs-resolver: true,
+      bcrypt: true,
+    },
+}
