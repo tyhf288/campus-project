@@ -2,24 +2,48 @@ import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
-import { DbExceptionFilter } from './filter/db-exception.filter'
+import { DbExceptionFilter } from './common/filter/db-exception.filter'
+import { AllExceptionsFilter } from './common/filter/all-exceptions.filter'
 import { UserBaseDto } from './users/dto/user.base.dto'
+import { Logger } from 'nestjs-pino'
+import helmet from 'helmet'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
+  //给请求头盖个保护帽
+  app.use(helmet())
+  //接收参数是通过pipe简单过滤转换
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true, // 参数转换
       whitelist: true, // 去除非白名单属性
-      forbidNonWhitelisted: true, // 非白名单属性抛出异常,太严格了影响接口联调
+      forbidNonWhitelisted: false, // 关闭严格模式，允许额外字段（便于接口联调）
       transformOptions: {
         enableImplicitConversion: true, // 允许隐式转换
       },
+      exceptionFactory: (errors) => {
+        // 自定义验证错误响应格式
+        const messages = errors.map((error) => ({
+          field: error.property,
+          constraints: error.constraints,
+        }))
+        return new (require('@nestjs/common').BadRequestException)({
+          statusCode: 400,
+          message: 'Validation failed',
+          errors: messages,
+        })
+      },
     })
   )
-  app.useGlobalFilters(new DbExceptionFilter())
 
+  //使用日志工具pino
+  app.useLogger(app.get(Logger))
+
+  //注册异常过滤器（顺序很重要：具体过滤器先注册，全局过滤器后注册）
+  app.useGlobalFilters(new DbExceptionFilter(), new AllExceptionsFilter())
+
+  //swagger文档的生成
   const config = new DocumentBuilder()
     .setTitle('user example')
     .setDescription('The user API description')

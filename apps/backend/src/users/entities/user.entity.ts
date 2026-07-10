@@ -11,7 +11,7 @@ export class User {
    * 小程序学生：存储微信openid
    */
   @Property({ unique: true })
-  loginKey: string // 登录标识
+  loginKey?: string // 登录标识
 
   /**
    * 密码哈希

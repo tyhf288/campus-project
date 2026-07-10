@@ -19,7 +19,12 @@ export class DbExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
     const name = exception.name
-    const { status } = DB_HTTP_MAP[name]
-    response.status(status).json(DB_HTTP_MAP[name])
+    const { status, message } = DB_HTTP_MAP[name]
+    response.status(status).json({
+      statusCode: status,
+      message,
+      timestamp: new Date().toISOString(),
+      path: ctx.getRequest().url,
+    })
   }
 }
