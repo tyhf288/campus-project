@@ -3,6 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import Layout from '@/layouts/index.vue'
 import { useTagStore } from '@/stores/tag'
 import { useAdminStore } from '@/stores/admin'
+import { profileApi } from '@/api/auth'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -11,6 +12,11 @@ const routes: RouteRecordRaw[] = [
     component: Layout,
     redirect: '/dashboard',
     children: [],
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/index.vue'),
   },
 ]
 
@@ -22,7 +28,7 @@ const router = createRouter({
 // 标志位：防止重复初始化
 let isRoutesInitialized = false
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const adminStore = useAdminStore()
 
   // 如果路由还未初始化，先初始化
@@ -30,6 +36,10 @@ router.beforeEach((to, from, next) => {
     adminStore.init()
     isRoutesInitialized = true
     next(to.fullPath)
+  }
+  //验证token是否过期
+  if (to.path !== '/login') {
+    await profileApi()
   }
   next()
 })

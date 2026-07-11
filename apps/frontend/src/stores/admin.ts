@@ -20,15 +20,12 @@ export const useAdminStore = defineStore(
     const setMenu = () => {
       const filteredMenu = filterMenuByRoute(fullMenu, state.role as AdminRole)
       state.menu = filteredMenu
-      console.log('菜单过滤完成:', state.menu)
       const addMenuToRouter = addMenu(filteredMenu)
       addMenuToRouter.forEach((item) => {
         if (!router.hasRoute(item.name as string)) {
           router.addRoute('layout', item)
         }
       })
-
-      console.log('动态路由注册完成:', addMenuToRouter.length, '个路由')
     }
 
     const init = () => {

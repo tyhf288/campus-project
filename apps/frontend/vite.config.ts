@@ -21,32 +21,40 @@ export default defineConfig({
       resolvers: [
         ElementPlusResolver(),
         IconsResolver({
-          prefix: "Icon"
-        })
+          prefix: 'Icon',
+        }),
       ],
-      imports: ["vue", "vue-router", "pinia"],
+      imports: ['vue', 'vue-router', 'pinia'],
 
       eslintrc: {
-        enabled: true
-      }
+        enabled: true,
+      },
     }),
     Components({
       resolvers: [
         ElementPlusResolver(), // 自动注册图标组件
         IconsResolver({
-          enabledCollections: ["ep"]
-        })
-      ]
+          enabledCollections: ['ep'],
+        }),
+      ],
     }),
     ElementPlus({}),
     Icons({
-      autoInstall: true
+      autoInstall: true,
     }),
-    Inspect()
+    Inspect(),
   ],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url))
-    }
-  }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000', // 目标后端地址
+        changeOrigin: true, // 修改请求源，必须开启
+      },
+    },
+  },
 })

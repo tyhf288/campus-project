@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { RouteLocationNormalizedLoadedGeneric } from 'vue-router'
-import { useRouter } from 'vue-router'
+import router from '@/router/index'
 
 export const useTagStore = defineStore('tag', () => {
-  const router = useRouter()
   const tagList = ref<RouteLocationNormalizedLoadedGeneric[]>([])
   const addTag = (tag: RouteLocationNormalizedLoadedGeneric) => {
     if (!tagList.value.some((item) => item.path === tag.path)) {

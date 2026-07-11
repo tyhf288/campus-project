@@ -12,8 +12,3 @@ export interface UserVO {
   createdAt: string
   updatedAt: string | null
 }
-
-export interface LoginVO {
-  token: string
-  user: UserVO
-}

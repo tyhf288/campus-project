@@ -54,7 +54,9 @@ async function bootstrap() {
     // 重点：把所有被继承的基类全部注册！
     extraModels: [UserBaseDto],
   })
-  SwaggerModule.setup('api', app, document)
+
+  app.setGlobalPrefix('api')
+  SwaggerModule.setup('swagger', app, document)
 
   await app.listen(process.env.PORT ?? 3000)
 }
