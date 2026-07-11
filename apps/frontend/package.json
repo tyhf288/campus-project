@@ -18,6 +18,7 @@
     "@campus/types": "workspace:*",
     "@campus/utils": "workspace:*",
     "@element-plus/icons-vue": "^2.3.2",
+    "axios": "^1.18.1",
     "element-plus": "^2.14.2",
     "import": "^0.0.6",
     "normalize.css": "^8.0.1",

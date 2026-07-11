@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service'
 import { ConflictException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
+import { tokenVO } from '@campus/types'
 
 @Injectable()
 export class AuthService {
@@ -42,7 +43,7 @@ export class AuthService {
   }
 
   // 登录
-  async login(loginKey: string, password: string): Promise<{ access_token: string }> {
+  async login(loginKey: string, password: string): Promise<tokenVO> {
     const user = await this.UsersService.findOne(loginKey)
     if (!user) {
       throw new ConflictException('用户不存在')

@@ -1,21 +1,21 @@
 import { Controller } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { Post, Body } from '@nestjs/common'
-import { CreateSignUpDto } from './dto/create-signUp.dto'
+import { Post, Body, Get } from '@nestjs/common'
+
 import { LoginDto } from './dto/login.dto'
 import { Public } from './decorator/public.decorator'
-import { Throttle } from '@nestjs/throttler'
+import { RegisterDto } from './dto/register.dto'
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('register')
   @Public()
-  async signUp(@Body() createSignUpDto: CreateSignUpDto) {
+  async signUp(@Body() registerDto: RegisterDto) {
     return this.authService.signUp(
-      createSignUpDto.nickname!,
-      createSignUpDto.password!,
-      createSignUpDto.loginKey!
+      registerDto.nickname!,
+      registerDto.password!,
+      registerDto.loginKey!
     )
   }
 
@@ -23,5 +23,11 @@ export class AuthController {
   @Public()
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto.loginKey!, loginDto.password!)
+  }
+
+  //token验证
+  @Get()
+  async profile() {
+    return true
   }
 }
