@@ -12,11 +12,17 @@ const routes: RouteRecordRaw[] = [
     component: Layout,
     redirect: '/dashboard',
     children: [],
+    meta: {
+      title: 'ignore', //设置ignore不加入tags
+    },
   },
   {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login/index.vue'),
+    meta: {
+      title: 'ignore',
+    },
   },
 ]
 
@@ -28,20 +34,20 @@ const router = createRouter({
 // 标志位：防止重复初始化
 let isRoutesInitialized = false
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to) => {
   const adminStore = useAdminStore()
 
   // 如果路由还未初始化，先初始化
   if (!isRoutesInitialized) {
     adminStore.init()
     isRoutesInitialized = true
-    next(to.fullPath)
+    return { path: to.fullPath, replace: true }
   }
-  //验证token是否过期
+  //验证token是否过期,过期后由axios拦截器处理
   if (to.path !== '/login') {
     await profileApi()
   }
-  next()
+  return
 })
 
 // 路由后置守卫：添加标签

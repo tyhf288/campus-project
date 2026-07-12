@@ -1,22 +1,24 @@
 <template>
-  <div
-    v-for="item in tagList"
-    :key="item.path"
-    class="tag"
-    :class="{ activeTag: route.path === item.path }"
-    @click="router.push(item.path)"
-  >
-    <div class="icon"><component :is="item.meta.icon" v-if="item.meta.icon" /></div>
+  <TransitionGroup name="close">
+    <div
+      v-for="item in tagList"
+      :key="item.path"
+      class="tag"
+      :class="{ activeTag: route.path === item.path }"
+      @click="router.push(item.path)"
+    >
+      <div class="icon"><component :is="item.meta.icon" v-if="item.meta.icon" /></div>
 
-    <p>{{ item.meta.title }}</p>
-    <el-icon
-      v-if="item.name !== 'dashboard'"
-      class="active"
-      :size="12"
-      @click.stop="closeTag(item.path, route.path)"
-      ><Close
-    /></el-icon>
-  </div>
+      <p>{{ item.meta.title }}</p>
+      <el-icon
+        v-if="item.name !== 'dashboard'"
+        class="active"
+        :size="12"
+        @click.stop="closeTag(item.path, route.path)"
+        ><Close
+      /></el-icon>
+    </div>
+  </TransitionGroup>
 </template>
 <script setup lang="ts">
 import { useTagStore } from '@/stores/tag'
@@ -32,6 +34,16 @@ const { tagList } = storeToRefs(tagStore)
 </script>
 <style lang="scss" scoped>
 @use '../../assets/style/variables.module.scss' as *;
+
+.close-enter-active,
+.close-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.close-enter-from,
+.close-leave-to {
+  opacity: 0;
+}
 .activeTag {
   background-color: #3a98da;
   color: white;

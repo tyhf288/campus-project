@@ -1,4 +1,4 @@
-type AdminRole = 'admin' | 'auditor'
+import { UserRole } from '../enum/user.enum'
 interface MenuItem {
   path: string
   name: string
@@ -6,9 +6,9 @@ interface MenuItem {
   meta: {
     title: string
     icon?: string
-    roles: AdminRole[]
+    roles: UserRole[]
   }
   children?: MenuItem[]
 }
 
-export type { AdminRole, MenuItem }
+export type { MenuItem }

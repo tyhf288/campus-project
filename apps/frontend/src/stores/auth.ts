@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { useAdminStore } from './admin'
+import { useTagStore } from './tag'
 
 export const useAuthStore = defineStore(
   'auth',
@@ -19,9 +21,18 @@ export const useAuthStore = defineStore(
     const clearUserToken = () => {
       state.userToken = ''
       localStorage.removeItem('token')
+      localStorage.removeItem('auth')
     }
 
-    return { state, setUserToken, getUserToken, clearUserToken }
+    const logout = () => {
+      const adminStore = useAdminStore()
+      adminStore.clearAdmin()
+      const tagStore = useTagStore()
+      tagStore.clearTags()
+      clearUserToken()
+    }
+
+    return { state, setUserToken, getUserToken, clearUserToken, logout }
   },
   {
     // 持久化配置

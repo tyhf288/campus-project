@@ -3,7 +3,8 @@ import { UsersService } from '../users/users.service'
 import { ConflictException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { tokenVO } from '@campus/types'
+import { tokenVO, UserVO, UserRole } from '@campus/types'
+import { User } from '../users/entities/user.entity'
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,17 @@ export class AuthService {
     private UsersService: UsersService,
     private jwtService: JwtService
   ) {}
+
+  // 将 User 实体的时间转为字符串，去除密码
+  private transformToUserVO(user: User): UserVO {
+    const vo = {
+      ...user,
+      createdAt: user.createdAt.toISOString(),
+      updatedAt: user.updatedAt ? user.updatedAt.toISOString() : null,
+    }
+    delete vo.password
+    return vo
+  }
 
   // 生成token
   private async generateToken(loginKey: string, id: number) {
@@ -25,21 +37,25 @@ export class AuthService {
   async signUp(
     nickname: string,
     password: string,
-    loginKey: string
-  ): Promise<{ access_token: string }> {
+    loginKey: string,
+    role?: UserRole
+  ): Promise<tokenVO> {
     const userD = await this.UsersService.findOne(loginKey)
     if (userD) {
       throw new ConflictException('用户已存在')
     }
     const hashPassword = await bcrypt.hash(password, 10)
+    //创建用户
     await this.UsersService.create({
       loginKey,
       nickname,
       password: hashPassword,
+      role: (role as UserRole) || undefined,
     })
     const user = await this.UsersService.findOne(loginKey)
+    const tokenData = await this.generateToken(loginKey, user!.id)
 
-    return this.generateToken(loginKey, user!.id)
+    return { access_token: tokenData.access_token, user: this.transformToUserVO(user!) }
   }
 
   // 登录
@@ -52,7 +68,8 @@ export class AuthService {
     if (!isMatch) {
       throw new ConflictException('密码错误')
     }
+    const tokenData = await this.generateToken(loginKey, user!.id)
 
-    return await this.generateToken(loginKey, user!.id)
+    return { access_token: tokenData.access_token, user: this.transformToUserVO(user!) }
   }
 }

@@ -1,4 +1,4 @@
-import type { MenuItem, AdminRole } from '@campus/types'
+import type { MenuItem, UserRole } from '@campus/types'
 
 /**
  * 根据角色过滤菜单
@@ -6,7 +6,7 @@ import type { MenuItem, AdminRole } from '@campus/types'
  * @param role - 用户角色
  * @returns 过滤后的菜单数组
  */
-export const filterMenuByRoute = (menu: MenuItem[], role: AdminRole): MenuItem[] => {
+export const filterMenuByRoute = (menu: MenuItem[], role: UserRole): MenuItem[] => {
   const filteredMenu: MenuItem[] = []
 
   menu.forEach((item) => {

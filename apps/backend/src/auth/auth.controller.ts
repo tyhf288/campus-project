@@ -9,16 +9,20 @@ import { RegisterDto } from './dto/register.dto'
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  //注册
   @Post('register')
   @Public()
   async signUp(@Body() registerDto: RegisterDto) {
     return this.authService.signUp(
       registerDto.nickname!,
       registerDto.password!,
-      registerDto.loginKey!
+      registerDto.loginKey!,
+      registerDto.role
     )
   }
 
+  //登录
   @Post('login')
   @Public()
   async login(@Body() loginDto: LoginDto) {
@@ -27,7 +31,5 @@ export class AuthController {
 
   //token验证
   @Get()
-  async profile() {
-    return true
-  }
+  async profile() {}
 }

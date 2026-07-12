@@ -11,7 +11,7 @@ export class User {
    * 小程序学生：存储微信openid
    */
   @Property({ unique: true })
-  loginKey?: string // 登录标识
+  loginKey!: string // 登录标识
 
   /**
    * 密码哈希
@@ -27,11 +27,11 @@ export class User {
 
   /** 头像 */
   @Property({ nullable: true })
-  avatar?: string
+  avatar: string | null = null
 
   /** 邮箱（PC管理员使用，学生可空） */
   @Property({ nullable: true })
-  email?: string
+  email: string | null = null
 
   /** 用户状态 */
   @Enum(() => UserStatus)
@@ -43,7 +43,7 @@ export class User {
 
   /** 注册终端来源 */
   @Enum(() => UserTerminal)
-  terminal?: UserTerminal
+  terminal: UserTerminal | null = null
 
   /** 创建时间 */
   @Property({ onCreate: () => new Date() })
@@ -51,5 +51,5 @@ export class User {
 
   /** 更新时间 */
   @Property({ onUpdate: () => new Date(), nullable: true })
-  updatedAt?: Date
+  updatedAt: Date | null = null
 }

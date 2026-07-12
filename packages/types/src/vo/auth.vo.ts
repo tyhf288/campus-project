@@ -1,3 +1,5 @@
+import { UserVO } from './user.vo'
+
 export interface loginVO {
   loginKey: string
 }
@@ -9,4 +11,5 @@ export interface registerVO {
 
 export interface tokenVO {
   access_token: string
+  user: UserVO
 }
