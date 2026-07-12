@@ -2,7 +2,11 @@
   <div class="layout">
     <header><Header></Header></header>
     <main>
-      <aside><Aside></Aside></aside>
+      <aside>
+        <el-scrollbar height="calc(100vh - var(--header-height))">
+          <Aside></Aside>
+        </el-scrollbar>
+      </aside>
       <div class="right">
         <nav><Nav></Nav></nav>
         <div class="content">

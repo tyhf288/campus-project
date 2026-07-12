@@ -28,7 +28,7 @@ export const addMenu = (menu: MenuItem[]): RouteRecordRaw[] => {
   })
 
   function loadView(viewPath: string) {
-    // ✅ 构建正确的物理路径
+    // 构建正确的物理路径
     const fullPath = `/src/views/${viewPath}/index.vue`
     const module = modules[fullPath]
 
@@ -38,7 +38,7 @@ export const addMenu = (menu: MenuItem[]): RouteRecordRaw[] => {
       return () => Promise.resolve({ render: () => null })
     }
 
-    // ✅ 返回异步导入函数，实现真正的按需加载
-    return module
+    // 返回异步导入函数，实现真正的按需加载
+    return module()
   }
 }

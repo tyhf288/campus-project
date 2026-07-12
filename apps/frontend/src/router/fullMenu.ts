@@ -1,4 +1,5 @@
 import type { MenuItem } from '@campus/types'
+import { UserRole } from '@campus/types'
 
 export const fullMenu: MenuItem[] = [
   {
@@ -7,7 +8,7 @@ export const fullMenu: MenuItem[] = [
     meta: {
       title: '首页',
       icon: 'House',
-      roles: ['admin', 'auditor'],
+      roles: [UserRole.ADMIN, UserRole.AUDITOR],
     },
     component: 'dashboard',
   },
@@ -17,7 +18,7 @@ export const fullMenu: MenuItem[] = [
     meta: {
       title: '用户管理',
       icon: 'User',
-      roles: ['admin', 'auditor'],
+      roles: [UserRole.ADMIN, UserRole.AUDITOR],
     },
     children: [
       {
@@ -27,17 +28,17 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '用户列表',
           icon: 'List',
-          roles: ['admin', 'auditor'],
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
       {
-        path: '/userManagement/blickList',
-        name: 'blickList',
-        component: 'userManagement/blickList',
+        path: '/userManagement/blackList',
+        name: 'blackList',
+        component: 'userManagement/blackList',
         meta: {
           title: '黑名单列表',
           icon: 'Failed',
-          roles: ['admin', 'auditor'],
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
     ],
@@ -48,7 +49,7 @@ export const fullMenu: MenuItem[] = [
     meta: {
       title: '二手商品管理',
       icon: 'ShoppingBag',
-      roles: ['admin', 'auditor'],
+      roles: [UserRole.ADMIN, UserRole.AUDITOR],
     },
     children: [
       {
@@ -57,8 +58,8 @@ export const fullMenu: MenuItem[] = [
         component: 'goodsManage/goodsAudit',
         meta: {
           title: '商品审核',
-          icon: 'DocumentCheck',
-          roles: ['admin', 'auditor'],
+          icon: 'DocumentChecked',
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
       {
@@ -68,7 +69,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '全部商品',
           icon: 'List',
-          roles: ['admin', 'auditor'],
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
       {
@@ -78,7 +79,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '分类管理',
           icon: 'Menu',
-          roles: ['admin'],
+          roles: [UserRole.ADMIN],
         },
       },
     ],
@@ -89,7 +90,7 @@ export const fullMenu: MenuItem[] = [
     meta: {
       title: '校园墙管理',
       icon: 'Document',
-      roles: ['admin', 'auditor'],
+      roles: [UserRole.ADMIN, UserRole.AUDITOR],
     },
     children: [
       {
@@ -98,8 +99,8 @@ export const fullMenu: MenuItem[] = [
         component: 'postManage/postAudit',
         meta: {
           title: '帖子审核',
-          icon: 'DocumentCheck',
-          roles: ['admin', 'auditor'],
+          icon: 'DocumentChecked',
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
       {
@@ -109,7 +110,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '全部帖子',
           icon: 'List',
-          roles: ['admin', 'auditor'],
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
       {
@@ -119,7 +120,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '评论管理',
           icon: 'ChatDotRound',
-          roles: ['admin', 'auditor'],
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
       {
@@ -129,7 +130,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '板块配置',
           icon: 'Tickets',
-          roles: ['admin'],
+          roles: [UserRole.ADMIN],
         },
       },
     ],
@@ -140,7 +141,7 @@ export const fullMenu: MenuItem[] = [
     meta: {
       title: '举报工单',
       icon: 'Warning',
-      roles: ['admin', 'auditor'],
+      roles: [UserRole.ADMIN, UserRole.AUDITOR],
     },
     children: [
       {
@@ -150,7 +151,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '待处理举报',
           icon: 'Clock',
-          roles: ['admin', 'auditor'],
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
       {
@@ -160,7 +161,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '举报记录',
           icon: 'DocumentCopy',
-          roles: ['admin', 'auditor'],
+          roles: [UserRole.ADMIN, UserRole.AUDITOR],
         },
       },
     ],
@@ -171,7 +172,7 @@ export const fullMenu: MenuItem[] = [
     meta: {
       title: '系统设置',
       icon: 'Setting',
-      roles: ['admin'],
+      roles: [UserRole.ADMIN],
     },
     children: [
       {
@@ -181,7 +182,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '敏感词管理',
           icon: 'Delete',
-          roles: ['admin'],
+          roles: [UserRole.ADMIN],
         },
       },
       {
@@ -191,7 +192,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '轮播公告',
           icon: 'Picture',
-          roles: ['admin'],
+          roles: [UserRole.ADMIN],
         },
       },
     ],
@@ -202,7 +203,7 @@ export const fullMenu: MenuItem[] = [
     meta: {
       title: '系统日志',
       icon: 'DocumentCopy',
-      roles: ['admin'],
+      roles: [UserRole.ADMIN],
     },
     children: [
       {
@@ -212,7 +213,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '操作日志',
           icon: 'List',
-          roles: ['admin'],
+          roles: [UserRole.ADMIN],
         },
       },
       {
@@ -222,7 +223,7 @@ export const fullMenu: MenuItem[] = [
         meta: {
           title: '违规日志',
           icon: 'Warning',
-          roles: ['admin'],
+          roles: [UserRole.ADMIN],
         },
       },
     ],

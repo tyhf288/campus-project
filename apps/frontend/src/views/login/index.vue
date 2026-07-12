@@ -28,6 +28,7 @@ import type { tokenVO } from '@campus/types'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 
@@ -38,18 +39,25 @@ const form = ref<LoginParams>({
 const formRef = ref<typeof form>()
 
 const { setUserToken } = useAuthStore()
+const { setMenu, setAdmin } = useAdminStore()
 const handleLogin = async () => {
   const req = {
     loginKey: form.value.loginKey,
     password: form.value.password,
   }
-  const response = await loginApi(req)
-  const res: tokenVO = response.data
-  setUserToken(res.access_token)
-  if (res) {
-    const { setMenu } = useAdminStore()
-    setMenu()
-    await router.push('/')
+  try {
+    const response = await loginApi(req)
+    const res: tokenVO = response.data
+
+    if (res) {
+      setUserToken(res.access_token)
+      setAdmin(res.user)
+      setMenu()
+      ElMessage.success('登录成功')
+      router.push('/')
+    }
+  } catch (err: any) {
+    ElMessage.error(err.message)
   }
 }
 </script>
