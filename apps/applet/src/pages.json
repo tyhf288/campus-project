@@ -1,0 +1,172 @@
+{
+  "easycom": {
+    "autoscan": true,
+    //正则匹配
+    "custom": {
+      // uni-ui 规则如下配置
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/message/index",
+      "style": {
+        "navigationBarTitleText": "消息中心"
+      }
+    },
+    {
+      "path": "pages/mine/index",
+      "style": {
+        "navigationBarTitleText": "个人中心"
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    } // 登录页：微信授权
+  ],
+  "tabBar": {
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/message/index", "text": "消息" },
+      { "pagePath": "pages/mine/index", "text": "我的" }
+    ]
+  },
+  "subPackages": [
+    {
+      "root": "sub-goods", // 声明此分包为独立分包 // 分包1：二手交易模块
+      "independent": true,
+      "pages": [
+        {
+          "path": "pages/market/index",
+          "style": {
+            "navigationBarTitleText": "商品市场"
+          }
+        },
+        {
+          "path": "pages/market/category",
+          "style": {
+            "navigationBarTitleText": "商品分类"
+          }
+        },
+        {
+          "path": "pages/goods/publish",
+          "style": {
+            "navigationBarTitleText": "发布商品"
+          }
+        },
+        {
+          "path": "pages/goods/detail",
+          "style": {
+            "navigationBarTitleText": "商品详情"
+          }
+        },
+        {
+          "path": "pages/mine/my-goods",
+          "style": {
+            "navigationBarTitleText": "我的商品"
+          }
+        },
+        {
+          "path": "pages/mine/collect-goods",
+          "style": {
+            "navigationBarTitleText": "商品收藏"
+          }
+        }
+      ]
+    },
+    {
+      "root": "sub-wall", // 分包2：校园墙模块（表白/求助/失物/问答）
+      "independent": true,
+      "pages": [
+        {
+          "path": "pages/wall/index",
+          "style": {
+            "navigationBarTitleText": "信息墙"
+          }
+        },
+        {
+          "path": "pages/wall/publish",
+          "style": {
+            "navigationBarTitleText": "发布信息"
+          }
+        },
+        {
+          "path": "pages/wall/detail",
+          "style": {
+            "navigationBarTitleText": "信息详情"
+          }
+        },
+        {
+          "path": "pages/mine/my-post",
+          "style": {
+            "navigationBarTitleText": "我的发布"
+          }
+        },
+        {
+          "path": "pages/mine/collect-post",
+          "style": {
+            "navigationBarTitleText": "信息收藏"
+          }
+        }
+      ]
+    },
+    {
+      "root": "sub-common", // 分包3：通用公共页面（聊天、搜索、个人设置）
+      "independent": true,
+      "pages": [
+        {
+          "path": "pages/chat/chat",
+          "style": {
+            "navigationBarTitleText": "聊天"
+          }
+        },
+        {
+          "path": "pages/search/index",
+          "style": {
+            "navigationBarTitleText": "搜索"
+          }
+        },
+        {
+          "path": "pages/mine/auth",
+          "style": {
+            "navigationBarTitleText": "实名认证"
+          }
+        },
+        {
+          "path": "pages/mine/setting",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
+        },
+        {
+          "path": "pages/mine/feedback",
+          "style": {
+            "navigationBarTitleText": "意见反馈"
+          }
+        },
+        {
+          "path": "pages/mine/report",
+          "style": {
+            "navigationBarTitleText": "举报"
+          }
+        }
+      ]
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  }
+}

@@ -1,0 +1,52 @@
+// 主色调 薄荷绿（按钮、标签、导航强调色）
+$color-primary: #48BB98;
+$color-primary-light: #62c8aa;
+$color-primary-fade: rgba(72, 187, 152, 0.12);
+
+// 辅助色 暖橙色（发布、重点行动按钮、角标）
+$color-orange: #FF9F5B;
+$color-orange-light: #ffb783;
+
+// 功能色
+$color-success: #48BB98;
+$color-warning: #FF9F5B;
+$color-danger: #F56C6C;   // 删除、举报、违规提示
+$color-info: #86909C;
+
+// 文字色系
+$text-main: #303133;      // 标题、正文重要文字
+$text-regular: #606266;   // 普通内容文字
+$text-secondary: #909399; // 次要、备注、时间
+$text-placeholder: #C0C4CC;// 占位文字
+
+// 背景 & 分割线
+$bg-page: #F7FAF9;        // 页面整体浅底色
+$bg-card: #FFFFFF;        // 卡片白色背景
+$bg-gray: #F2F4F3;        // 浅灰模块背景
+$border-color: #E4E7ED;   // 分割线、边框
+
+
+//圆角规范
+$radius-sm: 6px;    // 小标签、小按钮
+$radius-base: 10px; // 搜索框、输入框、普通卡片【高频使用】
+$radius-lg: 14px;   // 大图卡片、弹窗、底部弹出层
+$radius-full: 999px;// 圆形头像、胶囊按钮
+
+// 字号
+$font-size-lg: 18px;    // 大标题
+$font-size-base: 16px;  // 正文标题
+$font-size-sm: 14px;    // 正文内容
+$font-size-xs: 12px;    // 时间、标签、备注信息
+
+// 字重
+$font-bold: 600;
+$font-normal: 400;
+
+$gap-xs: 4px;
+$gap-sm: 8px;
+$gap-base: 12px; // 页面通用间距
+$gap-lg: 16px;
+$gap-xl: 20px;
+
+// 页面左右安全边距（所有页面内容不要贴屏幕边缘）
+$page-padding: 16px;
