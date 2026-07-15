@@ -20,33 +20,36 @@ $text-secondary: #909399; // 次要、备注、时间
 $text-placeholder: #C0C4CC;// 占位文字
 
 // 背景 & 分割线
-$bg-page: #F7FAF9;        // 页面整体浅底色
-$bg-card: #FFFFFF;        // 卡片白色背景
+$bg-page: #c1f2e1;        // 页面整体浅底色
+$bg-card: #ddffe8;        // 卡片白色背景
 $bg-gray: #F2F4F3;        // 浅灰模块背景
 $border-color: #E4E7ED;   // 分割线、边框
 
 
 //圆角规范
-$radius-sm: 6px;    // 小标签、小按钮
-$radius-base: 10px; // 搜索框、输入框、普通卡片【高频使用】
-$radius-lg: 14px;   // 大图卡片、弹窗、底部弹出层
-$radius-full: 999px;// 圆形头像、胶囊按钮
+$radius-sm: 12rpx;    // 小标签、小按钮
+$radius-base: 20rpx; // 搜索框、输入框、普通卡片【高频使用】
+$radius-lg: 28rpx;   // 大图卡片、弹窗、底部弹出层
+$radius-full: 999rpx;// 圆形头像、胶囊按钮
 
 // 字号
-$font-size-lg: 18px;    // 大标题
-$font-size-base: 16px;  // 正文标题
-$font-size-sm: 14px;    // 正文内容
-$font-size-xs: 12px;    // 时间、标签、备注信息
+$font-size-lg: 36rpx;    // 大标题
+$font-size-base: 32rpx;  // 正文标题
+$font-size-sm: 28rpx;    // 正文内容
+$font-size-xs: 24rpx;    // 时间、标签、备注信息
 
 // 字重
 $font-bold: 600;
 $font-normal: 400;
 
-$gap-xs: 4px;
-$gap-sm: 8px;
-$gap-base: 12px; // 页面通用间距
-$gap-lg: 16px;
-$gap-xl: 20px;
+$gap-xs: 8rpx;
+$gap-sm: 16rpx;
+$gap-base: 24rpx; // 页面通用间距
+$gap-lg: 32rpx;
+$gap-xl: 40rpx;
 
 // 页面左右安全边距（所有页面内容不要贴屏幕边缘）
-$page-padding: 16px;
+$page-padding: 32rpx;
+
+//swiper高度
+$swiper-banner-height: 300rpx;
