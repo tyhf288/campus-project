@@ -21,7 +21,7 @@ $text-placeholder: #C0C4CC;// 占位文字
 
 // 背景 & 分割线
 $bg-page: #c1f2e1;        // 页面整体浅底色
-$bg-card: #ddffe8;        // 卡片白色背景
+$bg-card: #fafffc;        // 卡片白色背景
 $bg-gray: #F2F4F3;        // 浅灰模块背景
 $border-color: #E4E7ED;   // 分割线、边框
 
@@ -30,6 +30,7 @@ $border-color: #E4E7ED;   // 分割线、边框
 $radius-sm: 12rpx;    // 小标签、小按钮
 $radius-base: 20rpx; // 搜索框、输入框、普通卡片【高频使用】
 $radius-lg: 28rpx;   // 大图卡片、弹窗、底部弹出层
+$radius-xl: 40rpx;
 $radius-full: 999rpx;// 圆形头像、胶囊按钮
 
 // 字号
@@ -40,6 +41,7 @@ $font-size-xs: 24rpx;    // 时间、标签、备注信息
 
 // 字重
 $font-bold: 600;
+$font-medium: 500;
 $font-normal: 400;
 
 $gap-xs: 8rpx;
@@ -52,4 +54,4 @@ $gap-xl: 40rpx;
 $page-padding: 32rpx;
 
 //swiper高度
-$swiper-banner-height: 300rpx;
+$swiper-banner-height: 320rpx;
