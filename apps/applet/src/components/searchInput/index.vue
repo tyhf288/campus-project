@@ -16,9 +16,6 @@ vue
 import { ref } from 'vue'
 
 const search = ref('')
-defineOptions({
-  styleIsolation: 'shared',
-})
 </script>
 
 <style scoped lang="scss"></style>

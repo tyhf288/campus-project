@@ -1,29 +1,41 @@
 <template>
   <view class="home">
-    <view class="header">
-      <view
-        class="logo"
-        :style="{
-          paddingTop: safeAreaInsets?.top + 'px',
-        }"
-        ><text>校园墙</text></view
-      >
+    <!--  头部 -->
+    <view
+      class="header"
+      :style="{
+        paddingTop: safeAreaInsets?.top + 'px',
+      }"
+    >
+      <view class="logo"><text>校园墙</text></view>
+      <view class="search">
+        <SearchInput></SearchInput>
+      </view>
     </view>
-    <view class="search">
-      <SearchInput></SearchInput>
-    </view>
+
+    <!-- 轮播  -->
     <view class="swiper">
-      <Swiper :style="{ height: '$swiper-banner-height' }"></Swiper>
+      <Swiper :style="{ height: '320rpx' }"></Swiper>
     </view>
+    <!-- 功能模块  -->
     <view class="sub">
       <view class="sub-item" v-for="item in useList" :key="item.id" @click="handleC(item.path)">
         <image :src="item.img" class="item-img"></image>
         <text class="item-text">{{ item.title }}</text>
       </view>
     </view>
+
+    <!--热门二手  -->
     <view class="good">
-      <Mine></Mine>
+      <view class="hot-item">
+        <image class="hot-item-img" src="/static/commonIcon1.png" mode="scaleToFill" />
+        <text class="hot-item-text">热门闲置</text>
+      </view>
+      <!--组件  -->
+      <GoodItem></GoodItem>
     </view>
+
+    <!--热门墙  -->
     <view class="wall">
       <Wall></Wall>
     </view>
@@ -33,6 +45,7 @@
 <script setup lang="ts">
 import SearchInput from '@/components/searchInput/index.vue'
 import Swiper from '@/components/swiper/index.vue'
+import GoodItem from '@/components/goodItem/index.vue'
 import { ref } from 'vue'
 
 const useList = ref([
@@ -85,13 +98,12 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
       font-weight: $font-bold;
       font-family: fantasy;
     }
+    .search {
+      padding-top: $gap-lg;
+      border-radius: $radius-base;
+    }
   }
-  .search {
-    border-radius: $radius-base;
-  }
-  .swiper {
-    height: $swiper-banner-height;
-  }
+
   .sub {
     display: flex;
     justify-content: space-between;
@@ -103,29 +115,47 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
       height: 100%;
       background-color: $bg-card;
       border-radius: $radius-base;
+      box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       gap: $gap-xs;
       .item-img {
-        $img-size: 100rpx;
+        $img-size: 120rpx;
         width: $img-size;
         height: $img-size;
+        border-radius: $radius-xl;
       }
       .item-text {
         font-size: $font-size-base;
-        color: $text-regular;
+        color: $text-main;
+        font-weight: $font-bold;
       }
     }
   }
   .good {
-    height: 300rpx;
-    background-color: yellow;
     border-radius: $radius-base;
+    .hot-item {
+      height: 100rpx;
+      display: flex;
+      align-items: center;
+      gap: $gap-xs;
+      .hot-item-img {
+        $img-size: 70rpx;
+        width: $img-size;
+        height: $img-size;
+        border-radius: $radius-lg;
+      }
+      .hot-item-text {
+        font-size: 50rpx;
+        color: $text-main;
+        font-weight: $font-bold;
+      }
+    }
   }
   .wall {
-    height: 300rpx;
+    height: 400rpx;
     background-color: blue;
     border-radius: $radius-base;
   }
