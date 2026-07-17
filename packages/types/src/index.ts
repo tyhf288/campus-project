@@ -11,4 +11,4 @@ export type { UserVO } from './vo/user.vo'
 export type { MenuItem } from './common/menu.ts'
 
 //登录注册
-export type { loginVO, registerVO, tokenVO } from './vo/auth.vo'
+export type { loginVO, registerVO, tokenVO, appletLoginVO } from './vo/auth.vo'

@@ -1,29 +1,36 @@
 <template>
   <view class="good-list">
-    <view class="list-item">
+    <view class="list-item" v-for="item in props.goodList">
       <!-- 商品内容 -->
       <view class="item-main">
-        <image class="main-img" :src="'/static/releaseIdle.png'" mode="aspectFill" />
-        <text class="main-text">数学书</text>
+        <image class="main-img" :src="item.goodsImg" mode="aspectFill" />
+        <text class="main-text">{{ item.goodsName }}</text>
       </view>
       <!--商品卖家  -->
       <view class="item-foot">
         <view class="foot-left">
-          <image class="left-img" :src="'/static/campusPosting.png'" mode="aspectFill" />
-          <text class="left-text">数学家高斯</text>
+          <image class="left-img" :src="item.sellerAvatar" mode="aspectFill" />
+          <text class="left-text">{{ item.sellerName }}</text>
         </view>
-        <text class="foot-right">￥18</text>
+        <text class="foot-right">￥{{ item.price }}</text>
       </view>
     </view>
   </view>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+//接收传进来的数据列表
+const props = defineProps<{
+  goodList: any[]
+}>()
+</script>
 <style lang="scss" scoped>
 .good-list {
   $main-img-size: 150rpx;
   $foot-img-size: 45rpx;
   $padding-size: 10rpx;
-  height: $main-img-size + $foot-img-size + $padding-size;
+  // 高度计算：主图 + 主图文字行高 + 间距 + 卖家信息行高 + 价格行高 + 上下padding
+  height: auto;
+  min-height: $main-img-size + $foot-img-size + $padding-size * 4;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: $gap-sm;
@@ -43,7 +50,7 @@
         border-radius: $radius-lg;
       }
       .main-text {
-        font-size: $font-size-base;
+        font-size: $font-size-sm;
         color: $text-main;
         font-weight: $font-medium;
       }

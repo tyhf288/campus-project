@@ -10,9 +10,11 @@ import { ThrottlerModule } from '@nestjs/throttler'
 import { rateLimitConfig } from './common/configs/rate-limit'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
+import { HttpModule } from '@nestjs/axios'
 
 @Module({
   imports: [
+    HttpModule,
     TodosModule,
     UsersModule,
     MikroOrmModule.forRoot(config),

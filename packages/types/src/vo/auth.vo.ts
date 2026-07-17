@@ -9,6 +9,12 @@ export interface registerVO {
   nickname: string
 }
 
+export interface appletLoginVO {
+  code: string
+  nickname: string | null
+  avatar: string | null
+}
+
 export interface tokenVO {
   access_token: string
   user: UserVO
