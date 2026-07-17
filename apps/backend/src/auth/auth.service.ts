@@ -5,12 +5,14 @@ import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { tokenVO, UserVO, UserRole } from '@campus/types'
 import { User } from '../users/entities/user.entity'
+import { WechatService } from './wechat.service'
 
 @Injectable()
 export class AuthService {
   constructor(
     private UsersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private WechatService: WechatService
   ) {}
 
   // 将 User 实体的时间转为字符串，去除密码
@@ -58,7 +60,7 @@ export class AuthService {
     return { access_token: tokenData.access_token, user: this.transformToUserVO(user!) }
   }
 
-  // 登录
+  // pc登录
   async login(loginKey: string, password: string): Promise<tokenVO> {
     const user = await this.UsersService.findOne(loginKey)
     if (!user) {
@@ -71,5 +73,15 @@ export class AuthService {
     const tokenData = await this.generateToken(loginKey, user!.id)
 
     return { access_token: tokenData.access_token, user: this.transformToUserVO(user!) }
+  }
+
+  //小程序登录
+  async appletLogin(appletLoginDto) {
+    const { code, nickname, avatar } = appletLoginDto
+    //获取微信openid
+    const { openid } = await this.WechatService.code2Session(code)
+    //pc端和小程序端的账号统一为loginKey
+    const loginKey = openid
+    const user = await this.UsersService.findOne(loginKey)
   }
 }

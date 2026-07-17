@@ -1,17 +1,7 @@
 <template>
   <view class="home">
     <!--  头部 -->
-    <view
-      class="header"
-      :style="{
-        paddingTop: safeAreaInsets?.top + 'px',
-      }"
-    >
-      <view class="logo"><text>校园墙</text></view>
-      <view class="search">
-        <SearchInput></SearchInput>
-      </view>
-    </view>
+    <CommonHeader></CommonHeader>
 
     <!-- 轮播  -->
     <view class="swiper">
@@ -32,7 +22,7 @@
         <text class="hot-item-text">热门闲置</text>
       </view>
       <!--组件  -->
-      <GoodItem></GoodItem>
+      <GoodItem :goodList="hotGoods"></GoodItem>
     </view>
 
     <!--热门墙  -->
@@ -43,34 +33,35 @@
 </template>
 
 <script setup lang="ts">
-import SearchInput from '@/components/searchInput/index.vue'
 import Swiper from '@/components/swiper/index.vue'
 import GoodItem from '@/components/goodItem/index.vue'
+import CommonHeader from '@/components/commonHeader/index.vue'
 import { ref } from 'vue'
 
+// 功能模块数据（固定）
 const useList = ref([
   {
     id: 1,
     title: '发布闲置',
-    img: '/static/releaseIdle.png',
+    img: '/static/releaseIdle.svg',
     path: '/sub-goods/pages/goods/publish',
   },
   {
     id: 2,
     title: '校园发帖',
-    img: '/static/campusPosting.png',
+    img: '/static/campusPosting.svg',
     path: '/sub-wall/pages/wall/publish',
   },
   {
     id: 3,
     title: '二手市场',
-    img: '/static/mark.png',
+    img: '/static/mark.svg',
     path: '/sub-goods/pages/market/index',
   },
   {
     id: 4,
     title: '校园墙',
-    img: '/static/wall.png',
+    img: '/static/wall.svg',
     path: '/sub-wall/pages/wall/index',
   },
 ])
@@ -81,7 +72,27 @@ const handleC = (path: string) => {
   })
 }
 
-const { safeAreaInsets } = uni.getSystemInfoSync()
+//热门闲置(mock)
+const hotGoods = ref([
+  // 第一条数据（原图示例：数学书）
+  {
+    id: 1,
+    goodsImg: '/static/releaseIdle.svg',
+    goodsName: '数学书',
+    sellerAvatar: '/static/campusPosting.svg',
+    sellerName: '数学家高斯',
+    price: 18,
+  },
+  // 第二条模拟数据1
+  {
+    id: 2,
+    goodsImg: '/static/releaseIdle.svg',
+    goodsName: '大学英语四级真题',
+    sellerAvatar: '/static/campusPosting.svg',
+    sellerName: '英语小达人',
+    price: 12,
+  },
+])
 </script>
 
 <style scoped lang="scss">
@@ -91,18 +102,6 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
   display: flex;
   flex-direction: column;
   gap: $gap-xl;
-  .header {
-    .logo {
-      color: $text-main;
-      font-size: $font-size-lg;
-      font-weight: $font-bold;
-      font-family: fantasy;
-    }
-    .search {
-      padding-top: $gap-lg;
-      border-radius: $radius-base;
-    }
-  }
 
   .sub {
     display: flex;

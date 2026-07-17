@@ -6,6 +6,8 @@
   </view>
 </template>
 
+<script setup lang="ts"></script>
+
 <style lang="scss">
 .container {
   width: 100%;

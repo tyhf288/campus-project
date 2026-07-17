@@ -1,14 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsString } from 'class-validator'
+import { appletLoginVO } from '@campus/types'
 
-export class MiniProgramLoginDto {
+export class AppletLoginDto implements appletLoginVO {
   @ApiProperty({ description: '微信前端获取code' })
   @IsString()
   code: string
 
   @ApiProperty({ description: '微信昵称', required: false })
-  nickname?: string
+  @IsString()
+  nickname: string | null
 
   @ApiProperty({ description: '微信头像', required: false })
-  avatar?: string
+  @IsString()
+  avatar: string | null
 }
