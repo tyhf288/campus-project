@@ -12,11 +12,7 @@
         <!-- 头像区域 -->
         <view class="avatar-section">
           <view class="avatar-wrapper">
-            <image
-              class="avatar-img"
-              :src="userInfo.avatarUrl || '/static/default-avatar.png'"
-              mode="aspectFill"
-            />
+            <image class="avatar-img" :src="userInfo.avatar || undefined" mode="aspectFill" />
             <view class="avatar-edit-btn">
               <text class="edit-icon">📷</text>
             </view>
@@ -32,7 +28,13 @@
           <input
             type="nickname"
             placeholder="请输入您的昵称"
-            v-model="userInfo.nickName"
+            v-model="userInfo.nickname"
+            class="nickname-input"
+          />
+          <input
+            type="nickname"
+            placeholder="请输入您的邮箱（可选）"
+            v-model="userInfo.email"
             class="nickname-input"
           />
         </view>
@@ -54,23 +56,29 @@
 </template>
 
 <script setup lang="ts">
-import http from '@/api/http/index'
 import { ref } from 'vue'
+import { appletLoginVO } from '@campus/types'
+import { login } from '@/api/login'
 
-const userInfo = ref({
-  nickName: '',
-  avatarUrl: '',
+const userInfo = ref<appletLoginVO>({
+  code: '',
+  nickname: '',
+  avatar: '',
+  email: '',
 })
 
 // 获取微信头像
 const handleAvatar = async (e: any) => {
   // 1. 获取用户头像
-  userInfo.value.avatarUrl = e.detail.avatarUrl
+  userInfo.value.avatar = e.detail.avatarUrl
 }
 // 微信一键登录
 const wxLogin = async () => {
   const res = await uni.login()
   //获取code向后端请求
+  userInfo.value.code = res.code
+  const res2 = await login(userInfo.value)
+  console.log(res2)
 }
 </script>
 

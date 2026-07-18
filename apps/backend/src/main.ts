@@ -11,6 +11,13 @@ import helmet from 'helmet'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
+  // 启用 CORS 跨域支持
+  app.enableCors({
+    origin: '*', // 允许所有域名（开发环境）
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // 允许携带凭证
+  })
+
   //给请求头盖个保护帽
   app.use(helmet())
   //接收参数是通过pipe简单过滤转换

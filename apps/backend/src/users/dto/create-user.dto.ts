@@ -1,11 +1,11 @@
-import { PartialType, PickType } from '@nestjs/swagger'
+import { PartialType, PickType, OmitType } from '@nestjs/swagger'
 import { UserBaseDto } from './user.base.dto'
 import { IsString, MinLength } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 // 第一层先剔除不需要字段,防止元数据读取不到
-// class UserWithoutIdDto extends OmitType(UserBaseDto, ['id', 'createdAt', 'updatedAt']) {}
-class UserWithoutIdDto extends PickType(UserBaseDto, ['nickname', 'loginKey', 'role']) {} //测试用例
+class UserWithoutIdDto extends OmitType(UserBaseDto, ['id', 'createdAt', 'updatedAt']) {}
+// class UserWithoutIdDto extends PickType(UserBaseDto, ['nickname', 'loginKey', 'role']) {} //测试用例
 // 第二层再全部字段可选
 export class CreateUserDto extends PartialType(UserWithoutIdDto) {
   /**

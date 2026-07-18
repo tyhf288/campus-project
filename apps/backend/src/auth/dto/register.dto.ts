@@ -1,4 +1,4 @@
-import { IsString, MinLength } from 'class-validator'
+import { IsString, MinLength, IsEmail } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 import { registerVO, UserRole } from '@campus/types'
 import { Transform } from 'class-transformer'
@@ -21,6 +21,13 @@ export class RegisterDto implements registerVO {
   @MinLength(6)
   password?: string
 
+  @ApiProperty({ description: '用户头像', required: false })
+  @IsString()
+  avatar: string | null
+  @ApiProperty({ description: '用户邮箱', required: false })
+  @IsEmail()
+  email: string | null
+
   @ApiProperty({ description: '用户角色', required: true })
   @IsString()
   @Transform(({ value }) => {
@@ -29,5 +36,5 @@ export class RegisterDto implements registerVO {
     }
     return UserRole.AUDITOR
   })
-  role?: UserRole
+  role: UserRole
 }

@@ -30,7 +30,7 @@ export class AuthController {
     return this.authService.login(loginDto.loginKey!, loginDto.password!)
   }
 
-  //移动端登录
+  //移动端登录&&注册
   @Post('mobile/login')
   @Public()
   async mobileLogin(@Body() appletLoginDto: AppletLoginDto) {
