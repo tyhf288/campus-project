@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service'
 import { ConflictException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { tokenVO, UserVO, UserRole } from '@campus/types'
+import { tokenVO, UserVO, UserRole, UserTerminal } from '@campus/types'
 import { User } from '../users/entities/user.entity'
 import { WechatService } from './wechat.service'
 
@@ -15,14 +15,14 @@ export class AuthService {
     private WechatService: WechatService
   ) {}
 
-  // 将 User 实体的时间转为字符串，去除密码
+  // 将 User 实体的时间转为字符串，去除账号密码
   private transformToUserVO(user: User): UserVO {
+    const { password, loginKey, ...rest } = user
     const vo = {
-      ...user,
+      ...rest,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt ? user.updatedAt.toISOString() : null,
-    }
-    delete vo.password
+    } as UserVO
     return vo
   }
 
@@ -35,7 +35,7 @@ export class AuthService {
       }),
     }
   }
-  // 注册
+  // pc注册
   async signUp(
     nickname: string,
     password: string,
@@ -52,7 +52,9 @@ export class AuthService {
       loginKey,
       nickname,
       password: hashPassword,
-      role: (role as UserRole) || undefined,
+      role,
+      //后端统一设置登录端
+      terminal: UserTerminal.PC_ADMIN,
     })
     const user = await this.UsersService.findOne(loginKey)
     const tokenData = await this.generateToken(loginKey, user!.id)
@@ -75,13 +77,33 @@ export class AuthService {
     return { access_token: tokenData.access_token, user: this.transformToUserVO(user!) }
   }
 
-  //小程序登录
+  //小程序登录&&注册
   async appletLogin(appletLoginDto) {
+    //小程序角色默认为学生
     const { code, nickname, avatar } = appletLoginDto
     //获取微信openid
     const { openid } = await this.WechatService.code2Session(code)
     //pc端和小程序端的账号统一为loginKey
     const loginKey = openid
     const user = await this.UsersService.findOne(loginKey)
+    if (!user) {
+      //用户不存在就注册用户
+      await this.UsersService.create({
+        loginKey,
+        nickname,
+        avatar,
+        //小程序角色默认为学生
+        role: UserRole.STUDENT,
+        //后端统一设置登录端
+        terminal: UserTerminal.MINI_PROGRAM,
+      })
+
+      //用户存在了，就登录用户
+      const user = await this.UsersService.findOne(loginKey)
+      return {
+        access_token: await this.generateToken(loginKey, user!.id),
+        user: this.transformToUserVO(user!),
+      }
+    }
   }
 }
