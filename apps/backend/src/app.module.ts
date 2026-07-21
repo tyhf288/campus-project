@@ -11,18 +11,21 @@ import { rateLimitConfig } from './common/configs/rate-limit'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { HttpModule } from '@nestjs/axios'
+import { BlacksModule } from './blacks/blacks.module'
 
 @Module({
   imports: [
     HttpModule,
     TodosModule,
     UsersModule,
+    BlacksModule,
     MikroOrmModule.forRoot(config),
     LoggerModule.forRoot({
       pinoHttp: pinoHttpConfig,
     }),
     ThrottlerModule.forRoot(rateLimitConfig),
     AuthModule,
+    BlacksModule,
   ],
   controllers: [],
   providers: [

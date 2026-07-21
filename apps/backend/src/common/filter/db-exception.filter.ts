@@ -21,8 +21,9 @@ export class DbExceptionFilter implements ExceptionFilter {
     const name = exception.name
     const { status, message } = DB_HTTP_MAP[name]
     response.status(status).json({
-      statusCode: status,
+      code: status,
       message,
+      data: null,
       timestamp: new Date().toISOString(),
       path: ctx.getRequest().url,
     })

@@ -32,8 +32,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     // 构建统一的错误响应格式
     const errorResponse = {
-      statusCode: status,
+      code: status,
       message: typeof message === 'string' ? message : (message as any).message || 'Unknown error',
+      data: null,
       timestamp: new Date().toISOString(),
       path: request.url,
     }
