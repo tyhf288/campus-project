@@ -4,6 +4,7 @@ import { AppModule } from './app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { DbExceptionFilter } from './common/filter/db-exception.filter'
 import { AllExceptionsFilter } from './common/filter/all-exceptions.filter'
+import { TransformInterceptor } from './common/interceptor/transform.interceptor'
 import { UserBaseDto } from './users/dto/user.base.dto'
 import { Logger } from 'nestjs-pino'
 import helmet from 'helmet'
@@ -36,9 +37,9 @@ async function bootstrap() {
           constraints: error.constraints,
         }))
         return new (require('@nestjs/common').BadRequestException)({
-          statusCode: 400,
+          code: 400,
           message: 'Validation failed',
-          errors: messages,
+          data: { errors: messages },
         })
       },
     })
@@ -47,8 +48,14 @@ async function bootstrap() {
   //使用日志工具pino
   app.useLogger(app.get(Logger))
 
+  //注册全局拦截器（统一响应格式）
+  app.useGlobalInterceptors(new TransformInterceptor())
+
   //注册异常过滤器（顺序很重要：具体过滤器先注册，全局过滤器后注册）
   app.useGlobalFilters(new DbExceptionFilter(), new AllExceptionsFilter())
+
+  // 设置全局前缀（必须在 Swagger 配置之前）
+  app.setGlobalPrefix('api')
 
   //swagger文档的生成
   const config = new DocumentBuilder()
@@ -62,7 +69,6 @@ async function bootstrap() {
     extraModels: [UserBaseDto],
   })
 
-  app.setGlobalPrefix('api')
   SwaggerModule.setup('swagger', app, document)
 
   await app.listen(process.env.PORT ?? 3000)
