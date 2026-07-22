@@ -5,6 +5,7 @@ import { User } from './entities/user.entity'
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { UserVO } from '@campus/types'
+import { formatDate } from '@campus/utils'
 
 @Injectable()
 export class UsersService {
@@ -77,8 +78,8 @@ export class UsersService {
       status: user.status,
       role: user.role,
       terminal: user.terminal ?? null,
-      createdAt: user.createdAt.toISOString(),
-      updatedAt: user.updatedAt ? user.updatedAt.toISOString() : null,
+      createdAt: formatDate(user.createdAt, 'YYYY-MM-DD HH:mm:ss'),
+      updatedAt: user.updatedAt ? formatDate(user.updatedAt, 'YYYY-MM-DD HH:mm:ss') : null,
     }))
 
     return { list, total }
