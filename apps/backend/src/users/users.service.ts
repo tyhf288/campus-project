@@ -89,6 +89,11 @@ export class UsersService {
     return await this.userRepository.findOne({ loginKey: loginKey })
   }
 
+  //获取当前人数生成uid
+  async count() {
+    return await this.userRepository.count()
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOne(id)
     if (!user) {

@@ -1,17 +1,21 @@
 import { Entity, PrimaryKey, Property, Enum } from '@mikro-orm/core'
 import { UserRole, UserStatus, UserTerminal } from '@campus/types'
-@Entity()
+
+/**
+ * 用户实体 - 对应数据库表 "user"
+ * 所属模块: 用户认证模块 (auth)
+ */
+@Entity({ tableName: 'user', schema: 'userManagement' })
 export class User {
   @PrimaryKey()
   id!: number
 
-  /**
-   * 登录账号
-   * PC端管理员/审核员：管理员后台创建，唯一账号
-   * 小程序学生：存储微信openid
-   */
+  //管理员账号|小程序uid
   @Property({ unique: true })
   loginKey!: string // 登录标识
+  //小程序用户id，管理员为空
+  @Property({ unique: true, nullable: true })
+  openid: string | null = null
 
   /**
    * 密码哈希
@@ -34,16 +38,16 @@ export class User {
   email: string | null = null
 
   /** 用户状态 */
-  @Enum(() => UserStatus)
+  @Enum({ items: () => UserStatus })
   status: UserStatus = UserStatus.ACTIVE
 
   /** 用户角色 */
-  @Enum(() => UserRole)
+  @Enum({ items: () => UserRole })
   role: UserRole = UserRole.STUDENT
 
   /** 注册终端来源 */
-  @Enum(() => UserTerminal)
-  terminal: UserTerminal | null = null
+  @Enum({ items: () => UserTerminal, nullable: true })
+  terminal?: UserTerminal
 
   /** 创建时间 */
   @Property({ onCreate: () => new Date() })
@@ -51,5 +55,5 @@ export class User {
 
   /** 更新时间 */
   @Property({ onUpdate: () => new Date(), nullable: true })
-  updatedAt: Date | null = null
+  updatedAt?: Date
 }

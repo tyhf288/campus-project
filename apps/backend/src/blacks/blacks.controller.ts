@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common'
 import { BlacksService } from './blacks.service'
 import { CreateBlackDto } from './dto/create-black.dto'
 import { UpdateBlackDto } from './dto/update-black.dto'
+import type { BlackFilterGet } from '@campus/types'
 
 @Controller('blacks')
 export class BlacksController {
@@ -12,14 +13,10 @@ export class BlacksController {
     return this.blacksService.create(createBlackDto)
   }
 
+  //查询列表
   @Get()
-  findAll() {
-    return this.blacksService.findAll()
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.blacksService.findOne(+id)
+  findList(@Query() blackFilterGet: BlackFilterGet) {
+    return this.blacksService.findList(blackFilterGet)
   }
 
   @Patch(':id')

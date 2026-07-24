@@ -9,6 +9,7 @@ import { UserFilterGet } from '@campus/types'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // 创建用户
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto)

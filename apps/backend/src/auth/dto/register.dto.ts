@@ -1,4 +1,4 @@
-import { IsString, MinLength, IsEmail } from 'class-validator'
+import { IsString, MinLength, IsEmail, IsOptional } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 import { registerVO, UserRole } from '@campus/types'
 import { Transform } from 'class-transformer'
@@ -17,21 +17,25 @@ export class RegisterDto implements registerVO {
   nickname: string
 
   @ApiProperty({ description: '登录密码,PC账号必填', required: false })
+  @IsOptional()
   @IsString()
   @MinLength(6)
   password?: string
 
-  @ApiProperty({ description: '用户头像', required: false })
+  @ApiProperty({ description: '用户头像', required: false, type: String, nullable: true })
+  @IsOptional()
   @IsString()
-  avatar: string | null
-  @ApiProperty({ description: '用户邮箱', required: false })
+  avatar: string | null = null
+
+  @ApiProperty({ description: '用户邮箱', required: false, type: String, nullable: true })
+  @IsOptional()
   @IsEmail()
-  email: string | null
+  email: string | null = null
 
   @ApiProperty({ description: '用户角色', required: true })
   @IsString()
   @Transform(({ value }) => {
-    if (Object.values(UserRole).includes(value)) {
+    if (value && Object.values(UserRole).includes(value)) {
       return value as UserRole
     }
     return UserRole.AUDITOR
