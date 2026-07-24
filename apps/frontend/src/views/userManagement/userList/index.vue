@@ -76,15 +76,17 @@
         <template v-slot="{ row }">
           <el-button type="success" link> 详情 </el-button>
           <el-button type="primary" link> 编辑 </el-button>
-          <el-button type="danger" link> 拉黑 </el-button>
+          <el-button type="danger" link @click="pullBlack(row)"> 拉黑 </el-button>
         </template>
       </el-table-column>
     </template>
   </Table>
+  <!--拉黑弹窗-->
+  <el-dialog v-model="pullBackDialogVisible" title="拉黑" width="500"></el-dialog>
 </template>
 <script setup lang="ts">
 import { getUserList } from '@/api/userManagement/userList'
-import type { UserFilterGet } from '@campus/types'
+import type { UserFilterGet, UserVO } from '@campus/types'
 import { UserRole, UserStatus, UserTerminal } from '@campus/types'
 import Table from '@/components/Table/index.vue'
 
@@ -126,7 +128,7 @@ const statusDict = ref([
 ])
 
 //获取用户列表
-const userList = ref([])
+const userList = ref<UserVO[]>([])
 const listTotal = ref()
 const getList = async () => {
   const res = await getUserList(userFilterGet.value)
@@ -156,6 +158,12 @@ const handleSizeChange = (val: number) => {
 const handleCurrentChange = (val: number) => {
   userFilterGet.value.page = val
   getList()
+}
+
+//拉黑弹窗
+const pullBackDialogVisible = ref(false)
+const pullBlack = (row: any) => {
+  pullBackDialogVisible.value = true
 }
 
 onMounted(() => {

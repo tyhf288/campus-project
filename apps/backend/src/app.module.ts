@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { LoggerModule } from 'nestjs-pino'
 import config from './mikro-orm.config'
-import { TodosModule } from './todos/todos.module'
 import { UsersModule } from './users/users.module'
 import { pinoHttpConfig } from './common/configs/pino'
 import { AuthModule } from './auth/auth.module'
@@ -16,7 +15,6 @@ import { BlacksModule } from './blacks/blacks.module'
 @Module({
   imports: [
     HttpModule,
-    TodosModule,
     UsersModule,
     BlacksModule,
     MikroOrmModule.forRoot(config),

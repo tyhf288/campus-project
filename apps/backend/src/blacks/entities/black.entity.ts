@@ -1,6 +1,10 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 
-@Entity()
+/**
+ * 黑名单实体 - 对应数据库表 "blacklist"
+ * 所属模块: 用户管理模块 (user-management)
+ */
+@Entity({ tableName: 'blacklist', schema: 'userManagement' })
 export class Black {
   @PrimaryKey()
   id!: number

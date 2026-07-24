@@ -18,3 +18,7 @@ export type { loginVO, registerVO, tokenVO, appletLoginVO } from './vo/auth.vo'
 
 //用户列表相关
 export type { UserFilterGet } from './api/user.api'
+
+// 黑名单相关类型
+export type { BlackCreate, BlackUpdate, BlackFilterGet } from './api/black.api'
+export type { BlackVO } from './vo/black.vo'

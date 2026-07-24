@@ -15,12 +15,7 @@ export class AuthController {
   @Post('register')
   @Public()
   async signUp(@Body() registerDto: RegisterDto) {
-    return this.authService.signUp(
-      registerDto.nickname!,
-      registerDto.password!,
-      registerDto.loginKey!,
-      registerDto.role
-    )
+    return this.authService.signUp(registerDto)
   }
 
   //pc端登录

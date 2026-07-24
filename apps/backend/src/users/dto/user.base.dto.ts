@@ -9,6 +9,9 @@ export class UserBaseDto implements UserVO {
   @ApiProperty({ description: '登录账号' })
   loginKey: string
 
+  @ApiProperty({ description: '微信 OPENID', nullable: true })
+  openid: string | null
+
   @ApiProperty({ description: '昵称' })
   nickname: string
 
