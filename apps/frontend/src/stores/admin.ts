@@ -11,7 +11,7 @@ export const useAdminStore = defineStore(
   'admin',
   () => {
     const state = reactive({
-      role: '',
+      role: '' as UserRole,
       menu: [] as MenuItem[], //侧边栏菜单
       user: {} as UserVO,
     })
@@ -46,7 +46,7 @@ export const useAdminStore = defineStore(
     const clearAdmin = () => {
       state.menu = []
       localStorage.removeItem('admin')
-      state.role = ''
+      state.role = '' as UserRole
       state.user = {} as UserVO
     }
 

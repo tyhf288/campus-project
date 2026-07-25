@@ -29,11 +29,12 @@ export class AuthService {
   }
 
   // 生成token
-  private async generateToken(loginKey: string, id: number) {
+  private async generateToken(loginKey: string, id: number, role: UserRole) {
     return {
       access_token: await this.jwtService.sign({
         loginKey,
         id,
+        role,
       }),
     }
   }
@@ -52,7 +53,7 @@ export class AuthService {
       terminal: UserTerminal.PC_ADMIN,
     })
     const user = await this.UsersService.findOne(registerDto.loginKey)
-    const tokenData = await this.generateToken(registerDto.loginKey, user!.id)
+    const tokenData = await this.generateToken(registerDto.loginKey, user!.id, user!.role)
 
     return { access_token: tokenData.access_token, user: this.transformToUserVO(user!) }
   }
@@ -67,7 +68,7 @@ export class AuthService {
     if (!isMatch) {
       throw new ConflictException('密码错误')
     }
-    const tokenData = await this.generateToken(loginKey, user!.id)
+    const tokenData = await this.generateToken(loginKey, user!.id, user!.role)
 
     return { access_token: tokenData.access_token, user: this.transformToUserVO(user!) }
   }
@@ -106,14 +107,14 @@ export class AuthService {
 
         // 返回token和用户信息
         return {
-          access_token: await this.generateToken(openid, newUser.id),
+          access_token: await this.generateToken(openid, newUser.id, newUser.role),
           user: this.transformToUserVO(newUser),
         }
       }
 
       // 用户已存在，直接返回token
       return {
-        access_token: await this.generateToken(openid, user.id),
+        access_token: await this.generateToken(openid, user.id, user.role),
         user: this.transformToUserVO(user),
       }
     })

@@ -11,6 +11,7 @@ export class AuthGuard implements CanActivate {
     private reflector: Reflector
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    //对于登录请求，不需要验证token，判断其是否添加装饰器
     const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
