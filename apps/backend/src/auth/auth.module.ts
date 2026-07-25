@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core'
 import { WechatService } from './wechat.service'
 import { HttpModule } from '@nestjs/axios'
 import { ConfigModule } from '@nestjs/config'
+import { PermissionGuard } from './guard/permission.guard'
 
 @Module({
   imports: [
@@ -24,7 +25,11 @@ import { ConfigModule } from '@nestjs/config'
     AuthService,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: AuthGuard, // 全局守卫-登录token
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard, // 全局守卫-权限
     },
     WechatService,
   ],

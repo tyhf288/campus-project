@@ -10,8 +10,9 @@ export { UserRole, UserStatus, UserTerminal } from './enum/user.enum'
 // VO 接口出参契约
 export type { UserVO } from './vo/user.vo'
 
-// 菜单相关类型
+// 菜单相关类型|用户权限
 export type { MenuItem } from './common/menu.ts'
+export { ROLE_PERMISSIONS, PermissionCode } from './common/menu'
 
 //登录注册
 export type { loginVO, registerVO, tokenVO, appletLoginVO } from './vo/auth.vo'

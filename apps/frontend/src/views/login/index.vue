@@ -28,6 +28,8 @@ import type { tokenVO } from '@campus/types'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
+import { usePermissionStore } from '@/stores/permission'
+
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
@@ -40,6 +42,7 @@ const formRef = ref<typeof form>()
 
 const { setUserToken } = useAuthStore()
 const { setMenu, setAdmin } = useAdminStore()
+const { setPermissions } = usePermissionStore()
 const handleLogin = async () => {
   const req = {
     loginKey: form.value.loginKey,
@@ -53,6 +56,7 @@ const handleLogin = async () => {
       setUserToken(res.access_token)
       setAdmin(res.user)
       setMenu()
+      setPermissions(res.user.role)
       ElMessage.success('登录成功')
       router.push('/')
     }

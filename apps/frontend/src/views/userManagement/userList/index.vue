@@ -76,19 +76,37 @@
         <template v-slot="{ row }">
           <el-button type="success" link> 详情 </el-button>
           <el-button type="primary" link> 编辑 </el-button>
-          <el-button type="danger" link @click="pullBlack(row)"> 拉黑 </el-button>
+          <el-button type="danger" link @click="pullBlack(row)" v-permission="permissionCode">
+            拉黑
+          </el-button>
         </template>
       </el-table-column>
     </template>
   </Table>
   <!--拉黑弹窗-->
-  <el-dialog v-model="pullBackDialogVisible" title="拉黑" width="500"></el-dialog>
+  <el-dialog
+    v-model="pullBackDialogVisible"
+    title="拉黑用户"
+    width="500"
+    :show-close="true"
+    draggable
+    destroy-on-close
+    :close-on-click-modal="false"
+  >
+    <PullBlack
+      :pullList="pullList"
+      @pullBlackRequest="pullBlackRequest"
+      @closeDialog="closeDialog"
+    ></PullBlack>
+  </el-dialog>
 </template>
 <script setup lang="ts">
 import { getUserList } from '@/api/userManagement/userList'
-import type { UserFilterGet, UserVO } from '@campus/types'
-import { UserRole, UserStatus, UserTerminal } from '@campus/types'
+import type { UserFilterGet, UserVO, BlackCreate } from '@campus/types'
+import { UserRole, UserStatus, UserTerminal, PermissionCode } from '@campus/types'
 import Table from '@/components/Table/index.vue'
+import PullBlack from './pullBlack.vue'
+import { useAdminStore } from '@/stores/admin.ts'
 
 //请求参数
 const userFilterGet = ref<UserFilterGet>({
@@ -126,6 +144,8 @@ const statusDict = ref([
     value: UserStatus.DISABLED,
   },
 ])
+//按钮权限
+const permissionCode: PermissionCode[] = [PermissionCode.BLACKLIST_CREATE_STUDENT]
 
 //获取用户列表
 const userList = ref<UserVO[]>([])
@@ -161,9 +181,60 @@ const handleCurrentChange = (val: number) => {
 }
 
 //拉黑弹窗
+interface PullList {
+  userId: number
+  operatorId: number
+  userNickname: string
+  userLoginKey: string
+  operatorNickname: string
+}
+
 const pullBackDialogVisible = ref(false)
+//关闭弹窗
+const closeDialog = () => {
+  pullBackDialogVisible.value = false
+}
+//弹窗传入的参数
+const pullList = ref<PullList>({
+  userId: 0,
+  operatorId: 0,
+  userNickname: '',
+  userLoginKey: '',
+  operatorNickname: '',
+})
+
+//从store中获取当前管理员数据
+const adminStore = useAdminStore()
+
 const pullBlack = (row: any) => {
+  if (row.id === adminStore.state.user.id) {
+    ElMessage.error('不能拉黑自己')
+    return
+  } else if (
+    adminStore.state.user.role === UserRole.AUDITOR &&
+    row.role === UserRole.ADMIN &&
+    row.role === UserRole.AUDITOR
+  ) {
+    ElMessage.error('没有拉黑管理员权限')
+    return
+  }
+  pullList.value = {
+    userId: row.id,
+    operatorId: adminStore.state.user.id,
+    userNickname: row.nickname,
+    operatorNickname: adminStore.state.user.nickname,
+    userLoginKey: row.loginKey,
+  }
+
   pullBackDialogVisible.value = true
+}
+//进行拉黑请求
+const pullBlackRequest = async (pullCreate: BlackCreate) => {
+  // const res = await pullBlackCreate(pullCreate)
+  // if (res.code === 200) {
+  //   pullBackDialogVisible.value = false
+  //   getList()
+  // }
 }
 
 onMounted(() => {
