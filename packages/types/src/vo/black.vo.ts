@@ -20,6 +20,8 @@ export interface BlackVO {
   unbannedAt: string | null
   /** 解封操作人账号 */
   unbannedByLoginKey: number | null
+  /** 解封原因 */
+  unbannedReason: string | null
   /** 解封操作人名称 */
   unbannedNickname: string | null
   /** 解封时间 */

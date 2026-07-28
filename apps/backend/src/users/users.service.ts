@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { UserVO } from '@campus/types'
+import { UserVO, UserStatus } from '@campus/types'
 import { formatDate } from '@campus/utils'
 
 @Injectable()
@@ -16,6 +16,11 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const isUser = await this.userRepository.findOne({ loginKey: createUserDto.loginKey })
+    if (isUser) {
+      throw new Error('用户已存在')
+    }
+
     const user = this.userRepository.create(createUserDto as any)
     await this.em.flush()
     return user
@@ -87,6 +92,13 @@ export class UsersService {
 
   async findOne(loginKey: string) {
     return await this.userRepository.findOne({ loginKey: loginKey })
+  }
+  //拉黑用户查角色用,禁止暴露给前端
+  async findOneById(id: number) {
+    return await this.userRepository.findOne({ id: id })
+  }
+  async updateStatus(id: number, status: UserStatus) {
+    return await this.userRepository.nativeUpdate({ id: id }, { status: status })
   }
 
   //获取当前人数生成uid

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common'
 import { BlacksService } from './blacks.service'
 import { CreateBlackDto } from './dto/create-black.dto'
 import { UpdateBlackDto } from './dto/update-black.dto'
@@ -12,9 +12,11 @@ export class BlacksController {
 
   //用户拉黑
   @Post()
-  @Permission([PermissionCode.BLACKLIST_CREATE_STUDENT])
-  create(@Body() createBlackDto: CreateBlackDto) {
-    return this.blacksService.create(createBlackDto)
+  @Permission([PermissionCode.BLACKLIST_CREATE_STUDENT]) //权限控制,管理人员统一，对于审核员在业务层单独处理权限
+  create(@Body() createBlackDto: CreateBlackDto, @Req() req) {
+    const { user } = req
+    const role = user.role
+    return this.blacksService.create(createBlackDto, role)
   }
 
   //查询列表
@@ -23,9 +25,12 @@ export class BlacksController {
     return this.blacksService.findList(blackFilterGet)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBlackDto: UpdateBlackDto) {
-    return this.blacksService.update(+id, updateBlackDto)
+  @Patch()
+  @Permission([PermissionCode.BLACKLIST_CREATE_STUDENT])
+  update(@Body() updateBlackDto: UpdateBlackDto, @Req() req) {
+    const { user } = req
+    const role = user.role
+    return this.blacksService.update(updateBlackDto, role)
   }
 
   @Delete(':id')

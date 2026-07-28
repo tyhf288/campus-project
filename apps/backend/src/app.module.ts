@@ -11,6 +11,10 @@ import { ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
 import { HttpModule } from '@nestjs/axios'
 import { BlacksModule } from './blacks/blacks.module'
+import { ScheduleModule } from '@nestjs/schedule'
+import { RedisModule } from '@nestjs-modules/ioredis'
+import redisConfig, { RedisConfigOptions } from './common/configs/redis.config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
@@ -24,6 +28,31 @@ import { BlacksModule } from './blacks/blacks.module'
     ThrottlerModule.forRoot(rateLimitConfig),
     AuthModule,
     BlacksModule,
+    ScheduleModule.forRoot(),
+    // ✅ 加载 Redis 配置
+    ConfigModule.forRoot({
+      load: [redisConfig],
+      isGlobal: true,
+    }),
+
+    // ✅ Redis 模块配置（解耦后的简洁写法）
+    RedisModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const redisConf = configService.get<RedisConfigOptions>('redis')
+
+        if (!redisConf) {
+          throw new Error('Redis configuration is not defined')
+        }
+
+        return {
+          type: 'single',
+          url: `redis://${
+            redisConf.password ? `:${redisConf.password}@` : ''
+          }${redisConf.host}:${redisConf.port}/${redisConf.db}`,
+        }
+      },
+    }),
   ],
   controllers: [],
   providers: [

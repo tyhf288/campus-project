@@ -44,7 +44,10 @@ const props = withDefaults(defineProps<Props>(), {
   page: () => 1,
   pageSize: () => 5,
 })
-const emit = defineEmits(['handleSizeChange', 'handleCurrentChange'])
+const emit = defineEmits<{
+  handleSizeChange: [page: number]
+  handleCurrentChange: [pageSize: number]
+}>()
 
 //计算table高度自适应
 const tableHeight = ref()

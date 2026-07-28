@@ -15,7 +15,12 @@
         <el-input placeholder="请输入邮箱" clearable v-model="userFilterGet.email"></el-input>
       </el-form-item>
       <el-form-item label="角色">
-        <el-select placeholder="请选择角色" style="width: 140px" v-model="userFilterGet.role">
+        <el-select
+          placeholder="请选择角色"
+          style="width: 140px"
+          v-model="userFilterGet.role"
+          :clearable="true"
+        >
           <el-option
             v-for="item in roleDict"
             :key="item.value"
@@ -25,7 +30,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select placeholder="请选择状态" style="width: 140px" v-model="userFilterGet.status">
+        <el-select
+          placeholder="请选择状态"
+          style="width: 140px"
+          v-model="userFilterGet.status"
+          :clearable="true"
+        >
           <el-option
             v-for="item in statusDict"
             :key="item.value"
@@ -107,6 +117,8 @@ import { UserRole, UserStatus, UserTerminal, PermissionCode } from '@campus/type
 import Table from '@/components/Table/index.vue'
 import PullBlack from './pullBlack.vue'
 import { useAdminStore } from '@/stores/admin.ts'
+import { hasPermission } from '@campus/utils'
+import { createBlack } from '@/api/userManagement/blackList/index.ts'
 
 //请求参数
 const userFilterGet = ref<UserFilterGet>({
@@ -180,7 +192,11 @@ const handleCurrentChange = (val: number) => {
   getList()
 }
 
-//拉黑弹窗
+/**
+ * 拉黑弹窗
+ */
+
+//定义拉黑弹窗传入的参数
 interface PullList {
   userId: number
   operatorId: number
@@ -206,16 +222,20 @@ const pullList = ref<PullList>({
 //从store中获取当前管理员数据
 const adminStore = useAdminStore()
 
+//拉黑按钮
 const pullBlack = (row: any) => {
+  if (row.status === UserStatus.DISABLED) {
+    ElMessage.error('用户已拉黑')
+    return
+  }
   if (row.id === adminStore.state.user.id) {
     ElMessage.error('不能拉黑自己')
     return
-  } else if (
-    adminStore.state.user.role === UserRole.AUDITOR &&
-    row.role === UserRole.ADMIN &&
-    row.role === UserRole.AUDITOR
-  ) {
-    ElMessage.error('没有拉黑管理员权限')
+  }
+  //查询拉黑权限
+  const bool = hasPermission(adminStore.state.user.role, PermissionCode.BLACKLIST_CREATE_AUDITOR)
+  if ((adminStore.state.user.role === UserRole.AUDITOR && !bool) || row.role === UserRole.ADMIN) {
+    ElMessage.error('没有拉黑权限')
     return
   }
   pullList.value = {
@@ -230,11 +250,15 @@ const pullBlack = (row: any) => {
 }
 //进行拉黑请求
 const pullBlackRequest = async (pullCreate: BlackCreate) => {
-  // const res = await pullBlackCreate(pullCreate)
-  // if (res.code === 200) {
-  //   pullBackDialogVisible.value = false
-  //   getList()
-  // }
+  try {
+    await createBlack(pullCreate)
+    ElMessage.success('拉黑成功')
+    getList()
+  } catch (error) {
+    ElMessage.error('拉黑失败')
+  } finally {
+    closeDialog()
+  }
 }
 
 onMounted(() => {

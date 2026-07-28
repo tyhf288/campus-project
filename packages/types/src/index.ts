@@ -17,7 +17,7 @@ export { ROLE_PERMISSIONS, PermissionCode } from './common/menu'
 //登录注册
 export type { loginVO, registerVO, tokenVO, appletLoginVO } from './vo/auth.vo'
 
-//用户列表相关
+//用户列表相关api
 export type { UserFilterGet } from './api/user.api'
 
 // 黑名单相关类型

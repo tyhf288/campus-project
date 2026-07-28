@@ -7,7 +7,7 @@
  * formatDate(new Date(), 'YYYY-MM-DD HH:mm:ss') // "2026-07-22 21:50:32"
  * formatDate(new Date(), 'YYYY/MM/DD') // "2026/07/22"
  */
-export function formatDate(date: Date | number, format: string = 'YYYY-MM-DD'): string {
+export function formatDate(date: Date | number | string, format: string = 'YYYY-MM-DD'): string {
   const d = new Date(date)
 
   const year = d.getFullYear()

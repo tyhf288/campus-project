@@ -32,5 +32,4 @@ const config: Options = {
     fileName: (className: string) => className, // 种子文件命名约定
   },
 }
-
 export default config
