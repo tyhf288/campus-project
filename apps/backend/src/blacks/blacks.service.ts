@@ -1,21 +1,54 @@
-import { Injectable } from '@nestjs/common'
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  ConflictException,
+} from '@nestjs/common'
 import { CreateBlackDto } from './dto/create-black.dto'
 import { UpdateBlackDto } from './dto/update-black.dto'
-import type { BlackFilterGet, BlackVO } from '@campus/types'
+import { BlackFilterGet, BlackVO, UserRole, PermissionCode, UserStatus } from '@campus/types'
 import { Black } from './entities/black.entity'
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { formatDate } from '@campus/utils'
+import { hasPermission } from '@campus/utils'
+import { UsersService } from '../users/users.service'
+import { User } from '../users/entities/user.entity'
 
 @Injectable()
 export class BlacksService {
   constructor(
     private readonly em: EntityManager,
     @InjectRepository(Black)
-    private readonly blackRepository: EntityRepository<Black>
+    private readonly blackRepository: EntityRepository<Black>,
+    //通过id查用户数据
+    private readonly usersService: UsersService
   ) {}
-  create(createBlackDto: CreateBlackDto) {
-    return 'This action adds a new black'
+  //拉黑创建
+  async create(createBlackDto: CreateBlackDto, role: UserRole) {
+    const user = await this.usersService.findOneById(createBlackDto.userId)
+
+    if (!user) {
+      throw new NotFoundException('用户不存在')
+    } else if (user.status === UserStatus.DISABLED) {
+      throw new ConflictException('用户已拉黑')
+    }
+
+    //获取拉黑目标角色
+    const userRole = user.role
+    //配置使用权限-拉黑审核员
+    const permissionCode: PermissionCode[] = [PermissionCode.BLACKLIST_CREATE_AUDITOR]
+    const bool = hasPermission(role, permissionCode)
+    if (userRole === UserRole.ADMIN) {
+      throw new ForbiddenException('无法拉黑管理员')
+    } else if (userRole === UserRole.AUDITOR && !bool) {
+      throw new ForbiddenException('没有权限拉黑审核员')
+    }
+
+    const black = this.blackRepository.create(createBlackDto as any)
+    // 更新用户状态
+    user.status = UserStatus.DISABLED
+    await this.em.flush()
+    return black
   }
   //查询列表
   async findList(blackFilterGet: BlackFilterGet): Promise<{ list: BlackVO[]; total: number }> {
@@ -79,7 +112,8 @@ export class BlacksService {
       b."unbanned_at" as "unbannedAt",
       ub."login_key" as "unbannedByLoginKey",
       ub.nickname as "unbannedNickname",
-      b."unbanned_date" as "unbannedDate"
+      b."unbanned_date" as "unbannedDate",
+      b."unbanned_reason" as "unbannedReason"
     FROM "userManagement"."blacklist" b
     LEFT JOIN "userManagement"."user" u ON b."user_id" = u.id
     LEFT JOIN "userManagement"."user" op ON b."operator_id" = op.id
@@ -97,11 +131,12 @@ export class BlacksService {
       reason: item.reason,
       operatorLoginKey: item.operatorLoginKey,
       operatorNickname: item.operatorNickname,
-      createdAt: formatDate(item.createdAt, 'YYYY-MM-DD HH:mm:ss'),
-      unbannedAt: item.unbannedAt ? formatDate(item.unbannedAt, 'YYYY-MM-DD HH:mm:ss') : null,
+      createdAt: new Date(item.createdAt).toISOString(),
+      unbannedAt: item.unbannedAt ? new Date(item.unbannedAt).toISOString() : null,
       unbannedByLoginKey: item.unbannedByLoginKey,
       unbannedNickname: item.unbannedNickname,
-      unbannedDate: item.unbannedDate ? formatDate(item.unbannedDate, 'YYYY-MM-DD HH:mm:ss') : null,
+      unbannedDate: item.unbannedDate ? new Date(item.unbannedDate).toISOString() : null,
+      unbannedReason: item.unbannedReason,
     }))
 
     return {
@@ -110,8 +145,38 @@ export class BlacksService {
     }
   }
 
-  update(id: number, updateBlackDto: UpdateBlackDto) {
-    return `This action updates a #${id} black`
+  async update(updateBlackDto: UpdateBlackDto, role: UserRole) {
+    await this.em.transactional(async (em) => {
+      const black = await this.blackRepository.findOne({ id: updateBlackDto.id })
+      const bool = hasPermission(role, [PermissionCode.BLACKLIST_CREATE_AUDITOR])
+
+      if (!black) {
+        throw new NotFoundException('黑名单记录不存在')
+      }
+      const user = await em.findOne(User, black.userId)
+      if (!user) {
+        throw new NotFoundException('用户不存在')
+      }
+      if (user?.status === UserStatus.ACTIVE) {
+        throw new NotFoundException('用户已解封')
+      } else if (user?.role === UserRole.AUDITOR && !bool) {
+        throw new ForbiddenException('没有权限更新审核员记录')
+      }
+
+      // 更新解封相关字段
+      if (updateBlackDto.unbannedReason !== undefined) {
+        black.unbannedReason = updateBlackDto.unbannedReason
+      }
+      if (updateBlackDto.unbannedById !== undefined) {
+        black.unbannedById = updateBlackDto.unbannedById
+      }
+      user.status = UserStatus.ACTIVE
+      em.persist(user)
+      black.unbannedDate = new Date()
+
+      await this.em.flush()
+      return black
+    })
   }
 
   remove(id: number) {

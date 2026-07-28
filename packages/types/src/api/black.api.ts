@@ -8,18 +8,20 @@ export interface BlackCreate {
   reason: string
   /** 操作人ID（管理员ID） */
   operatorId: number
+  /** 预计解封日期 */
+  unbannedAt: string | null
 }
 
 /**
  * 更新黑名单请求接口
  */
 export interface BlackUpdate {
-  /** 解封时间 */
-  unbannedAt?: Date | null
+  /** 黑名单ID */
+  id: number
   /** 解封操作人ID */
-  unbannedById?: number | null
-  /** 解封时间 */
-  unbannedDate?: Date | null
+  unbannedById: number
+  /** 解封原因 */
+  unbannedReason: string
 }
 
 /**

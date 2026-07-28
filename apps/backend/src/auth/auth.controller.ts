@@ -6,6 +6,8 @@ import { LoginDto } from './dto/login.dto'
 import { AppletLoginDto } from './dto/appletLogin.dto'
 import { Public } from './decorator/public.decorator'
 import { RegisterDto } from './dto/register.dto'
+import { Permission } from '../auth/decorator/permission.decorator'
+import { PermissionCode } from '@campus/types'
 
 @Controller('auth')
 export class AuthController {
@@ -13,6 +15,7 @@ export class AuthController {
 
   //注册
   @Post('register')
+  @Permission([PermissionCode.USER_CREATE])
   @Public()
   async signUp(@Body() registerDto: RegisterDto) {
     return this.authService.signUp(registerDto)

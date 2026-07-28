@@ -1,21 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsInt, IsOptional, IsDateString } from 'class-validator'
+import { IsInt, MaxLength } from 'class-validator'
 import { Type } from 'class-transformer'
+import { BlackUpdate } from '@campus/types'
 
-export class UpdateBlackDto {
-  @ApiProperty({ description: '解封时间', required: false })
-  @IsOptional()
-  @IsDateString()
-  unbannedAt?: Date | null
-
-  @ApiProperty({ description: '解封操作人ID', required: false })
-  @IsOptional()
+export class UpdateBlackDto implements BlackUpdate {
+  @ApiProperty({ description: '解封ID', required: false })
   @IsInt()
   @Type(() => Number)
-  unbannedById?: number | null
+  id: number
 
-  @ApiProperty({ description: '解封时间', required: false })
-  @IsOptional()
-  @IsDateString()
-  unbannedDate?: Date | null
+  @ApiProperty({ description: '解封原因', required: false })
+  @MaxLength(255)
+  unbannedReason: string
+
+  @ApiProperty({ description: '解封操作人ID', required: false })
+  @IsInt()
+  @Type(() => Number)
+  unbannedById: number
 }

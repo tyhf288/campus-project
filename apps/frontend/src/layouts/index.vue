@@ -38,7 +38,6 @@ const computeCard = async () => {
   await nextTick()
   //获取节点
   const layoutDom = layoutRef.value
-  const asideDom = asideRef.value
   const headerDom = layoutDom.querySelector('.header')
   const navDom = layoutDom.querySelector('.nav')
 

@@ -22,18 +22,22 @@ export class Black {
   operatorId!: number
 
   /** 拉黑时间 */
-  @Property({ onCreate: () => new Date() })
+  @Property({ type: 'timestamptz', onCreate: () => new Date() })
   createdAt!: Date
 
-  /** 解封时间 */
-  @Property({ nullable: true })
+  /** 计划解封时间（若为 null 表示永久封禁） */
+  @Property({ type: 'timestamptz', nullable: true })
   unbannedAt: Date | null = null
 
   /** 解封操作人ID */
   @Property({ nullable: true })
   unbannedById: number | null = null
 
-  /** 解封时间 */
-  @Property({ nullable: true })
+  /** 解封原因 */
+  @Property({ length: 500, nullable: true })
+  unbannedReason: string | null = null
+
+  /** 实际解封执行时间 */
+  @Property({ type: 'timestamptz', nullable: true })
   unbannedDate: Date | null = null
 }

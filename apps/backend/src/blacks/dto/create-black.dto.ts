@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsInt, IsString, IsOptional, MinLength } from 'class-validator'
+import { IsInt, IsString, IsOptional, MinLength, Min } from 'class-validator'
 import { Type } from 'class-transformer'
+import { BlackCreate } from '@campus/types'
 
-export class CreateBlackDto {
+export class CreateBlackDto implements BlackCreate {
   @ApiProperty({ description: '用户ID' })
   @IsInt()
   @Type(() => Number)
@@ -17,4 +18,11 @@ export class CreateBlackDto {
   @IsInt()
   @Type(() => Number)
   operatorId: number
+
+  @ApiProperty({
+    description: '预计解封日期',
+  })
+  @IsString()
+  @IsOptional()
+  unbannedAt: string | null
 }
