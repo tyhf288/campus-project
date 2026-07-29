@@ -15,6 +15,7 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { RedisModule } from '@nestjs-modules/ioredis'
 import redisConfig, { RedisConfigOptions } from './common/configs/redis.config'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { OssModule } from './common/services/oss.module'
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
     ThrottlerModule.forRoot(rateLimitConfig),
     AuthModule,
     BlacksModule,
+    OssModule,
     ScheduleModule.forRoot(),
     // ✅ 加载 Redis 配置
     ConfigModule.forRoot({
