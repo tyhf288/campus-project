@@ -106,11 +106,8 @@ export class UsersService {
     return await this.userRepository.count()
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.findOne(id)
-    if (!user) {
-      throw new Error('用户不存在')
-    }
+  async update(updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.findOneOrFail({ id: updateUserDto.id })
     this.em.assign(user, updateUserDto)
     await this.em.flush()
     return user

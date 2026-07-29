@@ -16,7 +16,6 @@ export class AuthController {
   //注册
   @Post('register')
   @Permission([PermissionCode.USER_CREATE])
-  @Public()
   async signUp(@Body() registerDto: RegisterDto) {
     return this.authService.signUp(registerDto)
   }

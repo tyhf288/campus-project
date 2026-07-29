@@ -3,7 +3,8 @@ import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { SkipThrottle, Throttle } from '@nestjs/throttler'
-import { UserFilterGet } from '@campus/types'
+import { UserFilterGet, PermissionCode } from '@campus/types'
+import { Permission } from '../auth/decorator/permission.decorator'
 
 @Controller('users')
 export class UsersController {
@@ -29,9 +30,11 @@ export class UsersController {
     return this.usersService.findOne(nickname)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto)
+  //更新用户
+  @Permission([PermissionCode.USER_CREATE])
+  @Patch()
+  update(@Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(updateUserDto)
   }
 
   @Delete(':id')

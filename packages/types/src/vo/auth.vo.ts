@@ -11,6 +11,7 @@ export interface registerVO {
   avatar: string | null
   email: string | null
   role: UserRole
+  password: string
 }
 
 export interface appletLoginVO {
