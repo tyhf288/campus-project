@@ -2,7 +2,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { EntityRepository } from '@mikro-orm/core'
+import { EntityRepository, EntityManager } from '@mikro-orm/core'
 import { Black } from './entities/black.entity'
 import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
@@ -14,6 +14,7 @@ export class BlacksScheduler {
   constructor(
     @InjectRepository(Black)
     private readonly blackRepository: EntityRepository<Black>,
+    private readonly em: EntityManager, // 注入 EntityManager
     // 注入队列
     @InjectQueue('auto-unban')
     private readonly unbanQueue: Queue
@@ -26,8 +27,12 @@ export class BlacksScheduler {
 
     const now = new Date()
 
+    // ✅ 使用 fork() 创建独立的上下文，避免全局 EntityManager 错误
+    const contextEm = this.em.fork()
+    const contextRepository = contextEm.getRepository(Black)
+
     // 查询所有已过期且未解封的记录，只查询ID 减少IO开销
-    const expiredBlacks = await this.blackRepository.find(
+    const expiredBlacks = await contextRepository.find(
       {
         unbannedAt: { $lte: now }, // 解封时间已到
         unbannedDate: null, // 尚未解封

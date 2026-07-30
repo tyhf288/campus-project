@@ -8,8 +8,14 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "${path.resolve(__dirname, "src/assets/style/theme.scss").replace(/\\/g, "/")}" as *;`,
+        additionalData: `@use "${path.resolve(__dirname, 'src/assets/style/theme.scss').replace(/\\/g, '/')}" as *;`,
       },
     },
   },
-});
+  server: {
+    watch: {
+      usePolling: true, // 开启轮询监听，解决Windows fs.watch失效（治本方案）
+      interval: 500,
+    },
+  },
+})

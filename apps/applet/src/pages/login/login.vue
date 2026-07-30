@@ -8,7 +8,7 @@
       </view>
 
       <!-- 用户信息卡片 -->
-      <view class="user-card">
+      <view class="user-card" v-if="!isLogin">
         <!-- 头像区域 -->
         <view class="avatar-section">
           <view class="avatar-wrapper">
@@ -39,12 +39,18 @@
           />
         </view>
       </view>
-
+      <view class="login-action" v-show="!isLogin">
+        <button @click="wxLogin" class="wechat-login-btn">
+          <text class="btn-text">使用微信注册</text>
+        </button>
+        <text class="text-ch" @click="isLogin = !isLogin">登录</text>
+      </view>
       <!-- 登录按钮区域 -->
-      <view class="login-action">
+      <view class="login-action" v-show="isLogin">
         <button @click="wxLogin" class="wechat-login-btn">
           <text class="btn-text">微信一键登录</text>
         </button>
+        <text class="text-ch" @click="isLogin = !isLogin">注册</text>
       </view>
 
       <!-- 底部安全提示 -->
@@ -60,11 +66,14 @@ import { ref } from 'vue'
 import { appletLoginVO } from '@campus/types'
 import { login } from '@/api/login'
 
+//登录还是注册
+const isLogin = ref(false)
+
 const userInfo = ref<appletLoginVO>({
   code: '',
   nickname: '',
-  avatar: '',
-  email: '',
+  avatar: null,
+  email: null,
 })
 
 // 获取微信头像
@@ -74,11 +83,14 @@ const handleAvatar = async (e: any) => {
 }
 // 微信一键登录
 const wxLogin = async () => {
-  const res = await uni.login()
-  //获取code向后端请求
-  userInfo.value.code = res.code
-  const res2 = await login(userInfo.value)
-  console.log(res2)
+  try {
+    const res = await uni.login()
+    //获取code向后端请求
+    userInfo.value.code = res.code
+    const res2 = await login(userInfo.value)
+  } catch (error) {
+    console.log('登录出错', error)
+  }
 }
 </script>
 
@@ -243,6 +255,13 @@ const wxLogin = async () => {
         color: #ffffff;
         font-weight: $font-bold;
       }
+    }
+    .text-ch {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: $font-size-sm;
+      color: #36844e;
     }
   }
 

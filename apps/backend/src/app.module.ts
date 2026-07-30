@@ -17,6 +17,8 @@ import redisConfig, { RedisConfigOptions } from './common/configs/redis.config'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { OssModule } from './common/services/oss.module'
 
+import { GoodsManageModule } from './goods-manage/goods-manage.module'
+
 @Module({
   imports: [
     HttpModule,
@@ -55,6 +57,8 @@ import { OssModule } from './common/services/oss.module'
         }
       },
     }),
+
+    GoodsManageModule,
   ],
   controllers: [],
   providers: [
