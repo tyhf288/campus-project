@@ -21,4 +21,28 @@ const httpInterceptor = {
     // }
   },
 }
+
+/**
+ * 添加响应拦截器
+ */
+const responseInterceptor = {
+  success(res: UniNamespace.RequestSuccessCallbackResult) {
+    // 统一处理返回数据
+    console.log('响应拦截器', res)
+    const { statusCode, data } = res
+    // token过期、401登录失效统一跳转登录页
+    if (statusCode === 401) {
+      uni.showToast({ title: '登录已失效，请重新登录', icon: 'none' })
+      // uni.navigateTo({ url: '/pages/login/login' })
+      return Promise.reject(res)
+    }
+    // 直接剥离外层包装，业务页面直接拿data
+    return data
+  },
+  fail(err: UniNamespace.GeneralCallbackResult) {
+    uni.showToast({ title: '网络请求失败', icon: 'none' })
+    return Promise.reject(err)
+  },
+}
 uni.addInterceptor('request', httpInterceptor)
+uni.addInterceptor('request', responseInterceptor)
