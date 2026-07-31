@@ -8,6 +8,7 @@ import { Public } from './decorator/public.decorator'
 import { RegisterDto } from './dto/register.dto'
 import { Permission } from '../auth/decorator/permission.decorator'
 import { PermissionCode } from '@campus/types'
+import { AppletRegister } from './dto/appletRegister.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -32,6 +33,12 @@ export class AuthController {
   @Public()
   async mobileLogin(@Body() appletLoginDto: AppletLoginDto) {
     return this.authService.appletLogin(appletLoginDto)
+  }
+  //移动端注册
+  @Post('mobile/register')
+  @Public()
+  async mobileRegister(@Body() appletRegister: AppletRegister) {
+    return this.authService.appSignUp(appletRegister)
   }
   //token验证
   @Get()

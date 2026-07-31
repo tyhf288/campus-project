@@ -1,6 +1,9 @@
-import { defineConfig } from "vite";
-import uni from "@dcloudio/vite-plugin-uni";
-import path from "path";
+import { defineConfig } from 'vite'
+import uni from '@dcloudio/vite-plugin-uni'
+import path from 'path'
+
+const resolveAlias = (p: string) => path.resolve(__dirname, p).replace(/\\/g, '/')
+const nodeModules = resolveAlias('node_modules/')
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,13 +11,20 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "${path.resolve(__dirname, 'src/assets/style/theme.scss').replace(/\\/g, '/')}" as *;`,
+        // includePaths 让 Sass 可以解析 node_modules 路径
+        includePaths: [nodeModules],
+        // uview-plus 组件内部使用了 @include flex() 等 mixin，需要提前注入
+        additionalData: [
+          `@import "uview-plus/theme.scss";`,
+          `@import "${resolveAlias('src/assets/style/theme.scss')}";`,
+        ].join('\n') + '\n',
+        silenceDeprecations: ['import', 'legacy-js-api', 'global-builtin'],
       },
     },
   },
   server: {
     watch: {
-      usePolling: true, // 开启轮询监听，解决Windows fs.watch失效（治本方案）
+      usePolling: true,
       interval: 500,
     },
   },
