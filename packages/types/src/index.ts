@@ -8,7 +8,7 @@ export type { ApiResponse } from './common/response'
 export type { MenuItem } from './common/menu.ts'
 
 //登录注册|用户权限
-export type { loginVO, registerVO, tokenVO, appletLoginVO } from './vo/auth.vo'
+export type { loginVO, registerVO, tokenVO, appletLoginVO, appletRegisterVO } from './vo/auth.vo'
 export { ROLE_PERMISSIONS, PermissionCode } from './common/menu'
 
 //用户列表相关

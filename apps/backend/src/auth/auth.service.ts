@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service'
 import { ConflictException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { tokenVO, UserVO, UserRole, UserTerminal } from '@campus/types'
+import { tokenVO, UserVO, UserRole, UserTerminal, appletRegisterVO } from '@campus/types'
 import { User } from '../users/entities/user.entity'
 import { WechatService } from './wechat.service'
 import { EntityManager } from '@mikro-orm/postgresql'
@@ -73,10 +73,10 @@ export class AuthService {
     return { access_token: tokenData.access_token, user: this.transformToUserVO(user!) }
   }
 
-  //小程序登录&&注册
-  async appletLogin(appletLoginDto) {
+  //小程序注册
+  async appSignUp(appletRegisterDto: appletRegisterVO) {
     //小程序角色默认为学生
-    const { code, nickname, avatar } = appletLoginDto
+    const { code, nickname, avatar } = appletRegisterDto
     //获取微信openid
     const { openid } = await this.WechatService.code2Session(code)
 
@@ -84,6 +84,9 @@ export class AuthService {
     return await this.em.transactional(async (em) => {
       // 在事务内查询用户是否存在
       const user = await em.findOne(User, { openid })
+      if (user) {
+        throw new ConflictException('该微信账号已注册，请直接登录')
+      }
 
       if (!user) {
         // 按照注册顺序生成uid：在事务内查询当前用户总数，确保原子性
@@ -111,12 +114,25 @@ export class AuthService {
           user: this.transformToUserVO(newUser),
         }
       }
+    })
+  }
+  //小程序登录&&注册
+  async appletLogin(appletLoginDto) {
+    //小程序角色默认为学生
+    const { code } = appletLoginDto
+    //获取微信openid
+    const { openid } = await this.WechatService.code2Session(code)
 
+    // 在事务内查询用户是否存在
+    const user = await this.em.findOne(User, { openid })
+
+    if (user) {
       // 用户已存在，直接返回token
       return {
         access_token: await this.generateToken(openid, user.id, user.role),
         user: this.transformToUserVO(user),
       }
-    })
+    }
+    throw new ConflictException('用户未注册，请先完成注册')
   }
 }

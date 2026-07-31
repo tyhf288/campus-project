@@ -1,3 +1,5 @@
+import { ApiResponse } from '@campus/types'
+
 type RequestOptions = Omit<UniNamespace.RequestOptions, 'url' | 'method' | 'data'>
 type Params = Record<string, string | number>
 type Query = Record<string, string | number>
@@ -28,7 +30,7 @@ class Http {
     return url
   }
 
-  get(url: string, config?: Config, options?: RequestOptions) {
+  get<T = any>(url: string, config?: Config, options?: RequestOptions): Promise<ApiResponse<T>> {
     //如果使用params
     if (config?.params) {
       url = this.replaceParams(url, config.params)
@@ -42,17 +44,22 @@ class Http {
       ...options,
       url,
       method: 'GET',
-    })
+    }) as unknown as Promise<ApiResponse<T>>
   }
-  post(url: string, data: any, options?: RequestOptions) {
+  post<T = any>(url: string, data: any, options?: RequestOptions): Promise<ApiResponse<T>> {
     return uni.request({
       ...options,
       url,
       data,
       method: 'POST',
-    })
+    }) as unknown as Promise<ApiResponse<T>>
   }
-  patch(url: string, params: Params, data: any, options?: RequestOptions) {
+  patch<T = any>(
+    url: string,
+    params: Params,
+    data: any,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
     url = this.replaceParams(url, params)
 
     return uni.request({
@@ -60,16 +67,21 @@ class Http {
       url,
       data,
       method: 'PATCH' as any,
-    })
+    }) as unknown as Promise<ApiResponse<T>>
   }
-  del(url: string, params: Params, data: any, options?: RequestOptions) {
+  del<T = any>(
+    url: string,
+    params: Params,
+    data: any,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
     url = this.replaceParams(url, params)
     return uni.request({
       ...options,
       url,
       data,
       method: 'DELETE',
-    })
+    }) as unknown as Promise<ApiResponse<T>>
   }
 }
 const http = new Http()

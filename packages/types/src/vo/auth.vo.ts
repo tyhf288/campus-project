@@ -16,6 +16,10 @@ export interface registerVO {
 
 export interface appletLoginVO {
   code: string
+}
+
+export interface appletRegisterVO {
+  code: string
   nickname: string
   avatar: string | null
   email: string | null
