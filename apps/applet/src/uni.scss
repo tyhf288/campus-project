@@ -1,1 +1,4 @@
-// uni.scss 已被 vite additionalData 替代，此文件保留备用
+// uni.scss：uni-app 会自动注入到所有 .vue 的 <style> 中（包括 node_modules 组件）
+// @ 别名 Sass 无法解析，使用相对路径
+@import "uview-plus/theme.scss";
+@import "assets/style/theme.scss";

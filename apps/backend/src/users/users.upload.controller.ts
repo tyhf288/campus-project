@@ -7,8 +7,9 @@ import {
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { OssService } from '../common/services/oss.service'
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger'
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery } from '@nestjs/swagger'
 import type multer from 'multer'
+import { Get, Query } from '@nestjs/common'
 
 @ApiTags('用户管理-文件上传')
 @Controller('users')
