@@ -70,37 +70,31 @@ export class OssService {
     const now = Date.now()
     const expire = this.config.signatureExpire // 默认 30 分钟
 
-    // 构建 Policy 策略
+    // Policy 策略：限制上传目录和文件大小
+    // ⚠️ 关键：Policy conditions 必须覆盖 formData 中除 file/OSSAccessKeyId/signature/policy 外的所有字段
     const policyText = {
       expiration: new Date(now + expire * 1000).toISOString(),
       conditions: [
+        // 限制上传目录前缀
+        ['starts-with', '$key', dir],
         // 限制文件大小
         ['content-length-range', 0, this.config.directMaxSize],
-        // 限制上传目录
-        ['starts-with', '$key', dir + '/'],
       ],
     }
 
-    // Base64 编码 Policy
-    const policy = Buffer.from(JSON.stringify(policyText)).toString('base64')
-
-    // 计算签名
-    const signature = this.client.calculatePostSignature(policyText)
+    // calculatePostSignature 内部会做 base64 编码并计算 HMAC 签名
+    const result = this.client.calculatePostSignature(policyText)
 
     // 构造 OSS Host
     const host = `https://${this.config.bucket}.${this.config.region}.aliyuncs.com`
 
     return {
-      code: 200,
-      message: 'success',
-      data: {
-        accessKeyId: this.config.accessKeyId,
-        policy,
-        signature,
-        dir,
-        host,
-        expire: now + expire * 1000, // 过期时间戳
-      },
+      accessKeyId: result.OSSAccessKeyId,
+      policy: result.policy, // base64 编码后的 policy 字符串
+      signature: result.Signature, // HMAC-SHA1 签名字符串
+      dir,
+      host,
+      expire: now + expire * 1000, // 过期时间戳
     }
   }
 

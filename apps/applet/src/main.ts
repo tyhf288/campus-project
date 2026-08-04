@@ -6,8 +6,7 @@ import './api/http/config'
 import { createPinia } from 'pinia'
 // 持久化插件
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-// uview-plus 全局样式
-import 'uview-plus/index.scss'
+// 注意：uview-plus 全局样式已移至 App.vue <style>，避免 main.ts 每次增量编译都重新 emit app.wxss
 // uview-plus 组件库
 import uviewPlus from 'uview-plus'
 export function createApp() {

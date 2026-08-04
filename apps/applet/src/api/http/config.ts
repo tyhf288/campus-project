@@ -38,7 +38,7 @@ const responseInterceptor = {
       if (statusCode === 401) {
         uni.showToast({ title: '登录已失效，请重新登录', icon: 'none' })
         // 可开启跳转
-        // uni.navigateTo({ url: '/pages/login/login' })
+        uni.navigateTo({ url: '/pages/login/login' })
       } else {
         // 取出后端返回的错误信息，没有则使用默认文案
         let msg = `请求错误 ${statusCode}`

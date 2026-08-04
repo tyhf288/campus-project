@@ -4,17 +4,24 @@
     <!-- 个人信息头部 -->
     <view class="profile-header">
       <view class="profile-info">
-        <image class="avatar" src="/static/releaseIdle.svg" mode="aspectFill" />
+        <image
+          class="avatar"
+          :src="userInfo.avatar || '/static/releaseIdle.svg'"
+          mode="aspectFill"
+        />
         <view class="info-content">
-          <text class="username">张三</text>
+          <text class="username">{{ userInfo.nickname }}</text>
           <view class="credit-badge">
             <text class="credit-label">信誉：</text>
             <text class="credit-value excellent">优秀</text>
           </view>
         </view>
       </view>
-      <view class="edit-btn" @click="handleEditProfile">
+      <view class="edit-btn" @click="handleEditProfile" v-if="userInfo.nickname">
         <text class="edit-text">编辑</text>
+      </view>
+      <view class="edit-btn" @click="handleLogin" v-if="!userInfo.nickname">
+        <text class="edit-text">登录</text>
       </view>
     </view>
 
@@ -81,10 +88,25 @@
 
 <script setup lang="ts">
 import CommonHeader from '@/components/commonHeader/index.vue'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+
+const userInfo = userStore.state.userData
 // 编辑个人资料
 const handleEditProfile = () => {
   uni.showToast({
     title: '编辑资料',
+    icon: 'none',
+  })
+  uni.navigateTo({
+    url: '/pages/login/login',
+  })
+}
+// 登录
+const handleLogin = () => {
+  uni.showToast({
+    title: '登录',
     icon: 'none',
   })
   uni.navigateTo({

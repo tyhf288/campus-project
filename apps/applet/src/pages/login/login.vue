@@ -73,6 +73,7 @@ import { ref } from 'vue'
 import type { appletLoginVO, tokenVO, appletRegisterVO, ApiResponse } from '@campus/types'
 import { login, register } from '@/api/login'
 import { useUserStore } from '@/stores/user'
+import { uploadToOss } from '@/utils/oss-upload'
 
 // 登录还是注册
 const isLogin = ref(false)
@@ -148,9 +149,13 @@ const handleGetWxAvatar = async (e: any) => {
     })
     if (downloadRes.statusCode === 200) {
       const tempPath = downloadRes.tempFilePath
-      // 更新视图与表单数据
-      fileList.value = [{ url: tempPath }]
-      userInfo.value.avatar = tempPath
+      //上传到 OSS
+      uni.showLoading({ title: '上传头像中...' })
+      const ossUrl = await uploadToOss(tempPath, 'avatars')
+
+      // 更新表单数据（存储 OSS URL）
+      fileList.value = [{ url: tempPath }] // 预览仍使用本地路径
+      userInfo.value.avatar = ossUrl // 提交给后端的是 OSS URL
     }
   } catch (err) {
     uni.showToast({ title: '头像获取失败', icon: 'none' })
@@ -162,11 +167,23 @@ const handleGetWxAvatar = async (e: any) => {
  * 读取图片后的回调
  * @param res 上传组件返回的文件信息
  */
-const afterRead = (res: any) => {
-  // 更新表单中的头像字段
-  userInfo.value.avatar = res.tempFilePaths[0]
-  // 更新文件列表用于展示
-  fileList.value = [{ url: res.tempFilePaths[0] }]
+const afterRead = async (res: any) => {
+  const tempPath = res.tempFilePaths[0]
+
+  // 更新文件列表用于展示（本地预览）
+  fileList.value = [{ url: tempPath }]
+
+  // 上传到 OSS
+  uni.showLoading({ title: '上传头像中...' })
+  try {
+    const ossUrl = await uploadToOss(tempPath, 'avatars')
+    // 更新表单中的头像字段（存储 OSS URL）
+    userInfo.value.avatar = ossUrl
+    uni.hideLoading()
+  } catch (err) {
+    uni.hideLoading()
+    uni.showToast({ title: '头像上传失败', icon: 'none' })
+  }
 }
 
 /**
@@ -202,6 +219,9 @@ const wxRegister = async () => {
     userStore.setUserData(res2.data.user)
     userStore.setToken(res2.data.access_token)
     uni.showToast({ title: '注册成功' })
+    uni.reLaunch({
+      url: '/pages/index/index',
+    })
   } catch (err: any) {
     uni.showToast({ title: err.message || '注册失败', icon: 'error' })
   } finally {
@@ -210,7 +230,7 @@ const wxRegister = async () => {
 }
 
 /**
- * 微信一键登录/注册
+ * 微信一键登录
  */
 const wxLogin = async () => {
   // 校验通过再执行登录逻辑
@@ -224,6 +244,9 @@ const wxLogin = async () => {
     userStore.setUserData(res2.data.user)
     userStore.setToken(res2.data.access_token)
     uni.showToast({ title: '登录成功' })
+    uni.reLaunch({
+      url: '/pages/index/index',
+    })
   } catch (_error) {
     uni.showToast({
       title: '登录失败',
@@ -367,3 +390,4 @@ const wxLogin = async () => {
   }
 }
 </style>
+// test incremental // test incremental - modify login only
