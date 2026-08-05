@@ -327,9 +327,6 @@ importers:
       sass:
         specifier: ^1.101.0
         version: 1.101.0
-      uview-plus:
-        specifier: ^3.8.86
-        version: 3.8.86
       vue:
         specifier: ^3.4.21
         version: 3.5.39(typescript@5.7.2)
@@ -9762,10 +9759,6 @@ packages:
   uuid@8.3.0:
     resolution: {integrity: sha512-fX6Z5o4m6XsXBdli9g7DtWgAx+osMsRRZFKma1mIUsLCz6vRvv+pz5VNbyu9UEDzpMWulZfvpgb/cmDXVulYFQ==}
     hasBin: true
-
-  uview-plus@3.8.86:
-    resolution: {integrity: sha512-L/Rc9MfJ7Z+YVe5EQZ2yhkTUBqshvTsIQMKpkoWWgQPV/kGAOmiP3zxAWftkpQ38bmiIHVVLteJqi6KqIzevZw==}
-    engines: {HBuilderX: ^3.1.0, uni-app: ^4.66, uni-app-x: ''}
 
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
@@ -20949,8 +20942,6 @@ snapshots:
   utils-merge@1.0.1: {}
 
   uuid@8.3.0: {}
-
-  uview-plus@3.8.86: {}
 
   v8-compile-cache-lib@3.0.1: {}
 

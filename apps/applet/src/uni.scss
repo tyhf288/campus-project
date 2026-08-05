@@ -1,4 +1,3 @@
-// uni.scss：uni-app 会自动注入到所有 .vue 的 <style> 中（包括 node_modules 组件）
-// @ 别名 Sass 无法解析，使用相对路径
-@import "uview-plus/theme.scss";
+// uni.scss：uni-app 自动注入到所有 .vue 的 <style> 中
+// 项目设计变量（颜色、间距、圆角、字号等）
 @import "assets/style/theme.scss";

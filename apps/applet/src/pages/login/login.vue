@@ -1,50 +1,49 @@
 <template>
   <view class="container">
     <view class="login-page">
-      <!-- Logo和标题区域 -->
       <view class="login-header">
         <text class="app-name">校园墙</text>
         <text class="app-slogan">校内生活，一墙搞定</text>
       </view>
 
-      <!-- 用户信息卡片 - 注册模式 -->
       <view class="user-card" v-if="!isLogin">
-        <up-form :model="userInfo" ref="formRef" :rules="rules" labelWidth="120rpx">
-          <!-- 头像上传 -->
-
+        <uni-forms :model="userInfo" ref="formRef" :rules="rules as any" labelWidth="60">
           <view class="avatar-section">
-            <up-upload
-              :fileList="fileList"
-              @afterRead="afterRead"
-              @delete="deletePic"
-              name="avatar"
-              multiple
-              :maxCount="1"
-              :previewImage="true"
-            >
-              <image class="upload-avatar" :src="userInfo.avatar || undefined" mode="aspectFill" />
-            </up-upload>
-            <button open-type="chooseAvatar" @chooseavatar="handleGetWxAvatar" class="avatar-btn">
-              使用微信头像
-            </button>
+            <view class="avatar-wrapper" @click="chooseImage">
+              <image
+                class="upload-avatar"
+                :src="userInfo.avatar || '/static/default-avatar.png'"
+                mode="aspectFill"
+              />
+              <view class="avatar-mask">
+                <text class="mask-text">更换头像</text>
+              </view>
+            </view>
+            <view class="avatar-actions">
+              <button open-type="chooseAvatar" @chooseavatar="handleGetWxAvatar" class="avatar-btn">
+                使用微信头像
+              </button>
+              <text v-if="userInfo.avatar" class="clear-avatar" @click="deletePic">清除头像</text>
+            </view>
           </view>
 
-          <!-- 昵称输入 -->
-          <up-form-item label="昵称" prop="nickname">
-            <up-input
+          <uni-forms-item label="昵称" name="nickname">
+            <uni-easyinput
               v-model="userInfo.nickname"
               placeholder="请输入您的昵称"
-              maxlength="12"
+              :maxlength="12"
               clearable
-              type="nickname"
             />
-          </up-form-item>
+          </uni-forms-item>
 
-          <!-- 邮箱输入 -->
-          <up-form-item label="邮箱" prop="email">
-            <up-input v-model="userInfo.email" placeholder="请输入您的邮箱（可选）" clearable />
-          </up-form-item>
-        </up-form>
+          <uni-forms-item label="邮箱" name="email">
+            <uni-easyinput
+              v-model="userInfo.email"
+              placeholder="请输入您的邮箱（可选）"
+              clearable
+            />
+          </uni-forms-item>
+        </uni-forms>
       </view>
       <view class="login-action" v-show="!isLogin">
         <button @click="wxRegister" class="wechat-login-btn">
@@ -52,7 +51,6 @@
         </button>
         <text class="text-ch" @click="isLogin = !isLogin">登录</text>
       </view>
-      <!-- 登录按钮区域 -->
       <view class="login-action" v-show="isLogin">
         <button @click="wxLogin" class="wechat-login-btn">
           <text class="btn-text">微信一键登录</text>
@@ -60,7 +58,6 @@
         <text class="text-ch" @click="isLogin = !isLogin">注册</text>
       </view>
 
-      <!-- 底部安全提示 -->
       <view class="safety-notice">
         <text class="notice-text">保护个人信息安全，谨防诈骗</text>
       </view>
@@ -70,18 +67,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { appletLoginVO, tokenVO, appletRegisterVO, ApiResponse } from '@campus/types'
+import type { appletRegisterVO } from '@campus/types'
 import { login, register } from '@/api/login'
 import { useUserStore } from '@/stores/user'
 import { uploadToOss } from '@/utils/oss-upload'
 
-// 登录还是注册
 const isLogin = ref(false)
-
-// 表单引用
 const formRef = ref()
 
-// 用户信息表单数据
 const userInfo = ref<appletRegisterVO>({
   code: '',
   nickname: '',
@@ -89,19 +82,11 @@ const userInfo = ref<appletRegisterVO>({
   email: null,
 })
 
-// 上传文件列表
 const fileList = ref<any[]>([])
 
-/**
- * 表单校验规则
- */
 const rules = ref({
   nickname: [
-    {
-      required: true,
-      message: '请填写昵称',
-      trigger: ['blur', 'change'],
-    },
+    { required: true, message: '请填写昵称', trigger: ['blur', 'change'] },
     {
       validator: (_rule: any, value: string, callback: any) => {
         if (value && value.trim().length > 12) {
@@ -116,7 +101,6 @@ const rules = ref({
   email: [
     {
       validator: (_rule: any, value: string, callback: any) => {
-        // 邮箱为可选字段，填写时才校验格式
         if (value && value.trim()) {
           const reg = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/
           if (!reg.test(value)) {
@@ -133,95 +117,68 @@ const rules = ref({
   ],
 })
 
-/**
- * 获取微信头像回调
- */
+const chooseImage = () => {
+  uni.chooseImage({
+    count: 1,
+    sizeType: ['compressed'],
+    sourceType: ['album', 'camera'],
+    success: async (res) => {
+      const tempPath = res.tempFilePaths[0]
+      fileList.value = [{ url: tempPath }]
+      uni.showLoading({ title: '上传头像中...' })
+      try {
+        const ossUrl = await uploadToOss(tempPath, 'avatars')
+        userInfo.value.avatar = ossUrl
+        uni.hideLoading()
+      } catch {
+        uni.hideLoading()
+        uni.showToast({ title: '头像上传失败', icon: 'none' })
+      }
+    },
+  })
+}
+
 const handleGetWxAvatar = async (e: any) => {
   const wxAvatarUrl = e.detail.avatarUrl
-
   if (!wxAvatarUrl) return
-
   uni.showLoading({ title: '加载头像...' })
   try {
-    // 重点：微信头像地址需要下载到本地临时路径
-    const downloadRes = await uni.downloadFile({
-      url: wxAvatarUrl,
-    })
+    const downloadRes = await uni.downloadFile({ url: wxAvatarUrl })
     if (downloadRes.statusCode === 200) {
       const tempPath = downloadRes.tempFilePath
-      //上传到 OSS
       uni.showLoading({ title: '上传头像中...' })
       const ossUrl = await uploadToOss(tempPath, 'avatars')
-
-      // 更新表单数据（存储 OSS URL）
-      fileList.value = [{ url: tempPath }] // 预览仍使用本地路径
-      userInfo.value.avatar = ossUrl // 提交给后端的是 OSS URL
+      fileList.value = [{ url: tempPath }]
+      userInfo.value.avatar = ossUrl
     }
-  } catch (err) {
+  } catch {
     uni.showToast({ title: '头像获取失败', icon: 'none' })
   } finally {
     uni.hideLoading()
   }
 }
-/**
- * 读取图片后的回调
- * @param res 上传组件返回的文件信息
- */
-const afterRead = async (res: any) => {
-  const tempPath = res.tempFilePaths[0]
 
-  // 更新文件列表用于展示（本地预览）
-  fileList.value = [{ url: tempPath }]
-
-  // 上传到 OSS
-  uni.showLoading({ title: '上传头像中...' })
-  try {
-    const ossUrl = await uploadToOss(tempPath, 'avatars')
-    // 更新表单中的头像字段（存储 OSS URL）
-    userInfo.value.avatar = ossUrl
-    uni.hideLoading()
-  } catch (err) {
-    uni.hideLoading()
-    uni.showToast({ title: '头像上传失败', icon: 'none' })
-  }
-}
-
-/**
- * 删除图片的回调
- */
 const deletePic = () => {
-  // 清空表单中的头像字段
   userInfo.value.avatar = null
-  // 清空文件列表
   fileList.value = []
 }
 
 const userStore = useUserStore()
 
-/**
- * 微信一键注册
- */
 const wxRegister = async () => {
   try {
-    // 表单校验失败会直接抛出异常，进入catch
     await formRef.value?.validate()
     uni.showLoading({ title: '注册中...' })
     const res = await uni.login()
     userInfo.value.code = res.code
     const res2 = await register(userInfo.value)
-
-    // 如果后端返回业务失败，手动抛出异常
     if (res2.code !== 200) {
-      // reject等价方案：主动抛出错误
       throw new Error(res2.message || '注册失败')
     }
-
     userStore.setUserData(res2.data.user)
     userStore.setToken(res2.data.access_token)
     uni.showToast({ title: '注册成功' })
-    uni.reLaunch({
-      url: '/pages/index/index',
-    })
+    uni.reLaunch({ url: '/pages/index/index' })
   } catch (err: any) {
     uni.showToast({ title: err.message || '注册失败', icon: 'error' })
   } finally {
@@ -229,29 +186,18 @@ const wxRegister = async () => {
   }
 }
 
-/**
- * 微信一键登录
- */
 const wxLogin = async () => {
-  // 校验通过再执行登录逻辑
   uni.showLoading({ title: '登录中...' })
   try {
     const res = await uni.login()
-    // 获取code向后端请求
     userInfo.value.code = res.code
     const res2 = await login(userInfo.value)
-    // 存储用户信息
     userStore.setUserData(res2.data.user)
     userStore.setToken(res2.data.access_token)
     uni.showToast({ title: '登录成功' })
-    uni.reLaunch({
-      url: '/pages/index/index',
-    })
-  } catch (_error) {
-    uni.showToast({
-      title: '登录失败',
-      icon: 'error',
-    })
+    uni.reLaunch({ url: '/pages/index/index' })
+  } catch {
+    uni.showToast({ title: '登录失败', icon: 'error' })
   } finally {
     uni.hideLoading()
   }
@@ -271,6 +217,12 @@ const wxLogin = async () => {
   }
 }
 
+.clear-avatar {
+  font-size: 22rpx;
+  color: $color-danger;
+  padding: 4rpx 12rpx;
+}
+
 .container {
   height: 100vh;
   background-color: $bg-page;
@@ -278,13 +230,13 @@ const wxLogin = async () => {
   flex-direction: column;
   justify-content: center;
 }
+
 .login-page {
   padding: 0 $page-padding;
   display: flex;
   flex-direction: column;
   gap: $gap-xl;
 
-  // Logo和标题区域
   .login-header {
     display: flex;
     flex-direction: column;
@@ -294,42 +246,68 @@ const wxLogin = async () => {
     padding-top: 80rpx;
     padding-bottom: $gap-lg;
 
-    .logo {
-      width: 120rpx;
-      height: 120rpx;
-      border-radius: $radius-xl;
-      box-shadow: 0 4rpx 16rpx rgba(72, 187, 152, 0.2);
-    }
-
     .app-name {
       font-size: 48rpx;
       color: $text-main;
       font-weight: $font-bold;
       font-family: fantasy;
     }
-
     .app-slogan {
       font-size: $font-size-sm;
       color: $text-secondary;
     }
   }
 
-  // 用户信息卡片
   .user-card {
     background-color: $bg-card;
     border-radius: $radius-base;
     box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
     padding: $gap-lg;
 
-    // 头像区域：垂直排列、居中
     .avatar-section {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: $gap-sm;
+
+      .avatar-wrapper {
+        position: relative;
+        width: 160rpx;
+        height: 160rpx;
+
+        .avatar-mask {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: $radius-full;
+          background: rgba(0, 0, 0, 0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.2s;
+
+          .mask-text {
+            color: #fff;
+            font-size: $font-size-xs;
+          }
+        }
+
+        &:active .avatar-mask {
+          opacity: 1;
+        }
+      }
+
+      .avatar-actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: $gap-base;
+      }
     }
 
-    // 自定义上传头像样式
     .upload-avatar {
       width: 160rpx;
       height: 160rpx;
@@ -339,7 +317,6 @@ const wxLogin = async () => {
     }
   }
 
-  // 登录按钮区域
   .login-action {
     .wechat-login-btn {
       border: none;
@@ -351,12 +328,10 @@ const wxLogin = async () => {
       justify-content: center;
       box-shadow: 0 8rpx 24rpx rgba(72, 187, 152, 0.3);
       transition: all 0.3s ease;
-
       &:active {
         transform: scale(0.98);
         box-shadow: 0 4rpx 12rpx rgba(72, 187, 152, 0.2);
       }
-
       .btn-text {
         font-size: $font-size-base;
         color: #ffffff;
@@ -372,14 +347,12 @@ const wxLogin = async () => {
     }
   }
 
-  // 底部安全提示
   .safety-notice {
     background-color: rgba(255, 159, 91, 0.1);
     border-radius: $radius-base;
     padding: $gap-base $gap-lg;
     margin-top: auto;
     margin-bottom: $gap-xl;
-
     .notice-text {
       font-size: $font-size-xs;
       color: $color-orange;
@@ -390,4 +363,3 @@ const wxLogin = async () => {
   }
 }
 </style>
-// test incremental // test incremental - modify login only

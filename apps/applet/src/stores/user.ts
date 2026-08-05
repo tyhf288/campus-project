@@ -17,6 +17,7 @@ export const useUserStore = defineStore(
     }
     //存储token
     const setToken = (token: string) => {
+      state.token = token
       storage.setItem('token', token)
     }
     //获取token

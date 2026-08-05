@@ -10,3 +10,8 @@ export function login(data: appletLoginVO): Promise<ApiResponse<tokenVO>> {
 export function register(data: appletLoginVO): Promise<ApiResponse<tokenVO>> {
   return http.post('/auth/mobile/register', data)
 }
+
+//检查token
+export function checkToken(): Promise<ApiResponse<boolean>> {
+  return http.get('/auth')
+}
