@@ -44,13 +44,13 @@ const useList = ref([
     id: 1,
     title: '发布闲置',
     img: '/static/releaseIdle.svg',
-    path: '/sub-goods/pages/goods/publish',
+    path: '/pages/publish/index?publishType=idle',
   },
   {
     id: 2,
     title: '校园发帖',
     img: '/static/campusPosting.svg',
-    path: '/sub-wall/pages/wall/publish',
+    path: '/pages/publish/index?publishType=post',
   },
   {
     id: 3,
@@ -67,6 +67,16 @@ const useList = ref([
 ])
 
 const handleC = (path: string) => {
+  // 防御性检查：确保 path 存在
+  if (!path) {
+    console.error('handleC: path 参数为空')
+    uni.showToast({
+      title: '路径错误',
+      icon: 'none',
+    })
+    return
+  }
+
   uni.navigateTo({
     url: path,
   })

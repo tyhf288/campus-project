@@ -3,6 +3,10 @@ import { useUserStore } from '@/stores/user'
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL as string
 const httpInterceptor = {
+  /**
+   *
+   * @param args 请求拦截
+   */
   invoke(args: UniNamespace.RequestOptions) {
     // request 触发前拼接 url
     args.url = baseUrl + '/api' + args.url
@@ -22,12 +26,11 @@ const httpInterceptor = {
       args.header.Authorization = `Bearer ${token}`
     }
   },
-}
-
-/**
- * 添加响应拦截器
- */
-const responseInterceptor = {
+  /**
+   *
+   * @param res 响应拦截
+   * @returns
+   */
   success(res: UniNamespace.RequestSuccessCallbackResult) {
     // 统一处理返回数据
     const { statusCode, data } = res
@@ -37,8 +40,14 @@ const responseInterceptor = {
       // 登录失效单独处理
       if (statusCode === 401) {
         uni.showToast({ title: '登录已失效，请重新登录', icon: 'none' })
-        // 可开启跳转
-        uni.navigateTo({ url: '/pages/login/login' })
+
+        // 延迟跳转，确保 toast 显示
+        setTimeout(() => {
+          uni.reLaunch({ url: '/pages/login/login' })
+        }, 1000)
+
+        // 抛出错误，让调用方知道请求失败
+        return Promise.reject(new Error('登录已失效'))
       } else {
         // 取出后端返回的错误信息，没有则使用默认文案
         let msg = `请求错误 ${statusCode}`
@@ -57,5 +66,5 @@ const responseInterceptor = {
     return Promise.reject(new Error('网络请求失败'))
   },
 }
+
 uni.addInterceptor('request', httpInterceptor)
-uni.addInterceptor('request', responseInterceptor)

@@ -6,16 +6,17 @@ import './api/http/config'
 import { createPinia } from 'pinia'
 // 持久化插件
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-// 注意：uview-plus 全局样式已移至 App.vue <style>，避免 main.ts 每次增量编译都重新 emit app.wxss
-// uview-plus 组件库
-import uviewPlus from 'uview-plus'
+// 引入路由守卫
+import { setupRouteGuard } from '@/utils/routeGuard'
+
 export function createApp() {
   const app = createSSRApp(App)
   //创建pinia实例
   const pinia = createPinia()
   pinia.use(piniaPluginPersistedstate)
   app.use(pinia)
-  app.use(uviewPlus)
+
+  setupRouteGuard()
 
   return {
     app,

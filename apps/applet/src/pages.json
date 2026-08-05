@@ -4,9 +4,7 @@
     //正则匹配
     "custom": {
       // uni-ui 规则如下配置
-      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
-      // uview-plus 规则如下配置 (v3 使用 up- 前缀，目录名为 u-)
-      "^up-(.*)": "uview-plus/components/u-$1/u-$1.vue"
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
     }
   },
   "pages": [
@@ -21,6 +19,16 @@
       "path": "pages/message/index",
       "style": {
         "navigationBarTitleText": "消息中心"
+      }
+    },
+    {
+      "path": "pages/publish/index",
+      "style": {
+        "navigationBarTitleText": "发布页面",
+        "componentPlaceholder": {
+          "publish-idle-page": "view",
+          "publish-post-page": "view"
+        }
       }
     },
     {
@@ -47,8 +55,7 @@
   },
   "subPackages": [
     {
-      "root": "sub-goods", // 声明此分包为独立分包 // 分包1：二手交易模块
-      "independent": true,
+      "root": "sub-goods", // 分包1：二手交易模块
       "pages": [
         {
           "path": "pages/market/index",
@@ -90,7 +97,6 @@
     },
     {
       "root": "sub-wall", // 分包2：校园墙模块（表白/求助/失物/问答）
-      "independent": true,
       "pages": [
         {
           "path": "pages/wall/index",
@@ -126,7 +132,6 @@
     },
     {
       "root": "sub-common", // 分包3：通用公共页面（聊天、搜索、个人设置）
-      "independent": true,
       "pages": [
         {
           "path": "pages/chat/chat",
