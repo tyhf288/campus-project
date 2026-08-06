@@ -4,7 +4,7 @@ import { UpdateGoodDto } from './dto/update-good.dto'
 
 @Injectable()
 export class GoodsService {
-  create(createGoodDto: CreateGoodDto) {
+  create(createGoodDto: CreateGoodDto, userId: number) {
     return 'This action adds a new good'
   }
 

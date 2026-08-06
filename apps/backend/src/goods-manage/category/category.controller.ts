@@ -12,9 +12,10 @@ export class CategoryController {
     return this.categoryService.create(createCategoryDto)
   }
 
+  // 获取所有分类
   @Get()
-  findAll() {
-    return this.categoryService.findAll()
+  async findAll() {
+    return await this.categoryService.findAll()
   }
 
   @Get(':id')

@@ -10,9 +10,10 @@ enum GoodsStatus {
 
 //商品质量
 enum GoodsQuality {
-  NEW = 'new', // 全新未拆
-  NORMAL = 'normal', // 九成新
-  SLIGHT_USED = 'slight_used', // 轻微使用
-  OLD = 'old', // 明显使用痕迹
+  NEW = 'new', // 全新
+  ANEW = 'anew', // 几乎全新
+  NORMAL = 'normal', // 轻微使用
+  SLIGHT_USED = 'slight_used', // 七成新
+  OLD = 'old', // 五成新
 }
 export { GoodsStatus, GoodsQuality }

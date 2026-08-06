@@ -35,27 +35,18 @@
     <view class="section">
       <view class="section-header">
         <uni-icons :type="'star-filled' as any" size="20" color="#FF9F5B"></uni-icons>
+
         <text class="section-title">图片上传</text>
       </view>
 
       <scroll-view scroll-x class="image-scroll" :show-scrollbar="false">
-        <view class="image-list">
-          <view
-            v-for="(img, idx) in images"
-            :key="idx"
-            class="image-item"
-            @click="previewImage(idx)"
-          >
-            <image class="img" :src="img" mode="aspectFill" />
-            <view class="delete-btn" @click.stop="removeImage(idx)">
-              <uni-icons :type="'closeempty' as any" size="24" color="#fff"></uni-icons>
-            </view>
-          </view>
-
-          <view v-if="images.length < maxImages" class="add-image-btn" @click="addImage">
-            <uni-icons :type="'plusempty' as any" size="48" color="#FF9F5B"></uni-icons>
-          </view>
-        </view>
+        <uni-file-picker
+          v-model="images"
+          limit="6"
+          title="最多选择6张图片"
+          mode="grid"
+          :image-styles="imageStyles"
+        ></uni-file-picker>
       </scroll-view>
     </view>
 
@@ -83,7 +74,11 @@ onLoad((options) => {
 
 /** 图片相关 */
 const images = ref<string[]>([])
-const maxImages = ref(9)
+const imageStyles = {
+  border: {
+    radius: '10%',
+  },
+}
 
 /** 表单组件引用 */
 const formComponentRef = ref()
@@ -95,35 +90,6 @@ function handleTypeChange(type: 'idle' | 'post') {
   publishType.value = type
   // 切换类型时清空图片
   images.value = []
-  // 更新最大图片数
-  maxImages.value = type === 'idle' ? 9 : 6
-}
-
-/** 添加图片 */
-function addImage() {
-  uni.chooseImage({
-    count: maxImages.value - images.value.length,
-    sizeType: ['compressed'],
-    sourceType: ['album', 'camera'],
-    success: (res) => {
-      images.value = [...images.value, ...res.tempFilePaths]
-    },
-  })
-}
-
-/** 删除图片 */
-function removeImage(idx: number) {
-  const next = [...images.value]
-  next.splice(idx, 1)
-  images.value = next
-}
-
-/** 预览图片 */
-function previewImage(idx: number) {
-  uni.previewImage({
-    current: idx.toString(),
-    urls: images.value,
-  })
 }
 
 /** 提交发布 - 委托给子组件处理 */
@@ -215,6 +181,9 @@ async function handleSubmit() {
 }
 
 /* ==================== 图片上传区域 ==================== */
+:deep(.file-picker__box-content) {
+  background-color: white;
+}
 .section {
   padding: 32rpx $page-padding;
   margin-top: $gap-sm;

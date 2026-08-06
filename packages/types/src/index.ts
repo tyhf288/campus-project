@@ -22,3 +22,4 @@ export type { BlackVO } from './vo/black.vo'
 
 //商品列表相关
 export { GoodsStatus, GoodsQuality } from './enum/goods.enum'
+export type { GoodsCreate } from './api/good.api'
