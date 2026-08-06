@@ -17,12 +17,12 @@ const isNeedIntercept = (route: string): boolean => {
 
 // 路由拦截器
 const routeInterceptor = {
-  async invoke(options: UniApp.NavigateToOptions & { url?: string }) {
+  invoke(options: UniApp.NavigateToOptions & { url?: string }) {
     const url = options.url
 
-    // 如果 url 为空，直接阻止
+    // 如果 url 为空，直接阻止并报错，防止微信开发者工具报 SystemError
     if (!url) {
-      console.error('路由拦截器: url 参数为空')
+      console.error('[RouteGuard] 拦截到空 URL 跳转，已阻止')
       return false
     }
 
@@ -30,12 +30,13 @@ const routeInterceptor = {
     if (isNeedIntercept(url)) {
       try {
         // 检查 token 是否有效
-        await checkToken()
+        checkToken()
         // 如果 checkToken 成功返回，说明 token 有效，放行
         return true
       } catch (error) {
         // token 无效或网络错误，checkToken 会抛出异常
         // 响应拦截器会自动处理 401 并跳转到登录页
+        console.warn('[RouteGuard] Token 验证失败，阻止跳转')
         return false // 阻止原跳转
       }
     }

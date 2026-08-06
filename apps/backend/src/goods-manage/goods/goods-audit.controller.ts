@@ -9,7 +9,7 @@ export class GoodsAuditController {
 
   @Post()
   create(@Body() createGoodDto: CreateGoodDto) {
-    return this.goodsService.create(createGoodDto)
+    return true
   }
 
   @Get()

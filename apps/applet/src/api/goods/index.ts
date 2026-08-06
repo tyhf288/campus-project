@@ -1,15 +1,12 @@
 import http from '@/api/http/index'
-import type { ApiResponse } from '@campus/types'
+import type { ApiResponse, GoodsCreate } from '@campus/types'
 
-export interface CreateGoodsParams {
-  title: string
-  description: string
-  price: number
-  quality: string
-  categoryId: number | null
-  images: string[]
+//发布商品
+export function createGoods(data: GoodsCreate): Promise<ApiResponse> {
+  return http.post('/goods', data)
 }
 
-export function createGoods(data: CreateGoodsParams): Promise<ApiResponse<any>> {
-  return http.post('/goods', data)
+//获取商品分类列表
+export function getCategoryList() {
+  return http.get('/category')
 }

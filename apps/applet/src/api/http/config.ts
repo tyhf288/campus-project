@@ -21,7 +21,7 @@ const httpInterceptor = {
     }
     //设置请求头
     const userStore = useUserStore()
-    const token = userStore.getToken() //待定
+    const token = userStore.getToken()
     if (token) {
       args.header.Authorization = `Bearer ${token}`
     }

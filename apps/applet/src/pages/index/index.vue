@@ -76,7 +76,6 @@ const handleC = (path: string) => {
     })
     return
   }
-
   uni.navigateTo({
     url: path,
   })

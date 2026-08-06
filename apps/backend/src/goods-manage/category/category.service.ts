@@ -1,15 +1,23 @@
 import { Injectable } from '@nestjs/common'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
+import { Category } from './entities/category.entity'
+import { EntityManager, EntityRepository } from '@mikro-orm/core'
+import { InjectRepository } from '@mikro-orm/nestjs'
 
 @Injectable()
 export class CategoryService {
+  constructor(
+    private readonly em: EntityManager,
+    @InjectRepository(Category)
+    private readonly categoryRepository: EntityRepository<Category>
+  ) {}
   create(createCategoryDto: CreateCategoryDto) {
     return 'This action adds a new category'
   }
 
-  findAll() {
-    return `This action returns all category`
+  async findAll() {
+    return await this.categoryRepository.findAll()
   }
 
   findOne(id: number) {

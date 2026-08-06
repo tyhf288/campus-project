@@ -34,7 +34,7 @@
         </view>
       </view>
 
-      <!-- 分色选择 & 分类选择 -->
+      <!-- 分色选择 & 匿名选择 -->
       <view class="form-row">
         <view class="form-col">
           <uni-forms-item label="分类选择" name="category">
@@ -42,6 +42,19 @@
               v-model="form.category"
               :localdata="categoryOptions"
               placeholder="教材选择"
+            />
+          </uni-forms-item>
+        </view>
+
+        <view class="form-col">
+          <uni-forms-item label="是否匿名" name="anonymous">
+            <uni-data-select
+              v-model="form.anonymous"
+              :localdata="[
+                { value: 'true', text: '匿名' },
+                { value: 'false', text: '不匿名' },
+              ]"
+              placeholder="请选择"
             />
           </uni-forms-item>
         </view>
@@ -75,9 +88,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { GoodsQuality } from '@campus/types'
-import { createGoods } from '@/api/goods'
+import { createGoods, getCategoryList } from '@/api/goods'
 import { uploadToOss } from '@/utils/oss-upload'
 
 /** 表单引用 */
@@ -91,8 +104,9 @@ const form = reactive({
   color: '',
   category: '',
   materials: '',
-  location: '东校区宿舍',
+  location: '',
   description: '',
+  anonymous: 'false',
 })
 
 /** 表单校验规则 */
@@ -127,20 +141,23 @@ const rules = {
 
 /** 成色选项（适配uni-data-select格式） */
 const qualityOptions = [
-  { value: GoodsQuality.NEW, text: '几乎全新' },
-  { value: GoodsQuality.NORMAL, text: '九成新' },
-  { value: GoodsQuality.SLIGHT_USED, text: '八成新' },
-  { value: GoodsQuality.OLD, text: '七成新' },
+  { value: GoodsQuality.NEW, text: '全新' },
+  { value: GoodsQuality.ANEW, text: '几乎全新' },
+  { value: GoodsQuality.NORMAL, text: '轻微使用' },
+  { value: GoodsQuality.SLIGHT_USED, text: '七成新' },
+  { value: GoodsQuality.OLD, text: '五成新' },
 ]
 
 /** 分类选项 */
-const categoryOptions = [
-  { value: 'textbook', text: '教材选择' },
-  { value: 'digital', text: '数码产品' },
-  { value: 'daily', text: '生活用品' },
-  { value: 'sports', text: '运动器材' },
-  { value: 'other', text: '其他' },
-]
+const categoryOptions = ref<Array<{ value: string; text: string }>>([])
+onMounted(async () => {
+  const res = await getCategoryList()
+  // 将后端返回的分类数据转换为 uni-data-select 需要的格式
+  categoryOptions.value = res.data.map((item: any) => ({
+    value: String(item.id),
+    text: item.name,
+  }))
+})
 
 // ==================== 暴露给父组件的方法 ====================
 
@@ -177,6 +194,7 @@ async function submit(images: string[]) {
       quality: form.quality,
       categoryId: form.category ? parseInt(form.category) : 1,
       images: imageUrls,
+      anonymous: form.anonymous === 'true',
     })
 
     uni.showToast({ title: '发布成功', icon: 'success' })

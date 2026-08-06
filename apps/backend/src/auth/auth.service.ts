@@ -107,10 +107,10 @@ export class AuthService {
 
         // 刷新到数据库
         await em.flush()
-
+        const tokenData = await this.generateToken(openid, newUser.id, newUser.role)
         // 返回token和用户信息
         return {
-          access_token: await this.generateToken(openid, newUser.id, newUser.role),
+          access_token: tokenData.access_token,
           user: this.transformToUserVO(newUser),
         }
       }
@@ -128,8 +128,9 @@ export class AuthService {
 
     if (user) {
       // 用户已存在，直接返回token
+      const tokenData = await this.generateToken(openid, user.id, user.role)
       return {
-        access_token: await this.generateToken(openid, user.id, user.role),
+        access_token: tokenData.access_token,
         user: this.transformToUserVO(user),
       }
     }
