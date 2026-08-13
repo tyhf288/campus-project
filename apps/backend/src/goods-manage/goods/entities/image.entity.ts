@@ -10,14 +10,14 @@ export class Image {
   goodsId: number
 
   // 对象存储图片地址
-  @Property({ type: 'varchar', length: 512, fieldName: 'image_url' })
-  imageUrl: string
+  @Property({ type: 'varchar', length: 512, fieldName: 'image_url', nullable: true })
+  imageUrl: string | null
 
   // 是否为主图 true=主图 false=普通图片
-  @Property({ type: 'boolean', default: false, fieldName: 'is_main' })
-  isMain!: boolean
+  @Property({ type: 'boolean', default: false, fieldName: 'is_main', nullable: true })
+  isMain?: boolean = false
 
   // 上传时间
   @Property({ type: 'timestamptz', defaultRaw: 'now()', fieldName: 'create_at' })
-  createAt: Date = new Date()
+  createAt?: Date = new Date()
 }

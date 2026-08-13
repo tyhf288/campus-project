@@ -12,23 +12,33 @@ export class CategoryService {
     @InjectRepository(Category)
     private readonly categoryRepository: EntityRepository<Category>
   ) {}
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category'
+
+  async create(dto: CreateCategoryDto) {
+    const category = this.em.create(Category, {
+      name: dto.name,
+      sort: dto.sort,
+      enable: dto.enable,
+      createAt: new Date(),
+    })
+    await this.em.flush()
+    return category
   }
 
   async findAll() {
-    return await this.categoryRepository.findAll()
+    return await this.categoryRepository.findAll({ orderBy: { sort: 'DESC' } })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`
+  async findOne(id: number) {
+    return await this.categoryRepository.findOneOrFail(id)
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`
+  async update(id: number, dto: UpdateCategoryDto) {
+    await this.categoryRepository.nativeUpdate({ id }, dto)
+    return { id, ...dto }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`
+  async remove(id: number) {
+    await this.categoryRepository.nativeDelete({ id })
+    return { id }
   }
 }
