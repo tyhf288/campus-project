@@ -46,13 +46,15 @@
           title="最多选择6张图片"
           mode="grid"
           :image-styles="imageStyles"
+          file-mediatype="image"
+          @select="handleImageSelect($event as any)"
         ></uni-file-picker>
       </scroll-view>
     </view>
 
     <!-- 根据类型渲染对应的表单组件 -->
-    <PublishIdlePage v-if="publishType === 'idle'" ref="formComponentRef" />
-    <PublishPostPage v-else ref="formComponentRef" />
+    <PublishIdlePage v-show="publishType === 'idle'" ref="idlePageRef" />
+    <PublishPostPage v-show="publishType === 'post'" ref="postPageRef" />
   </view>
 </template>
 
@@ -73,7 +75,10 @@ onLoad((options) => {
 })
 
 /** 图片相关 */
-const images = ref<string[]>([])
+//回显图片
+const images = ref<any[]>([])
+//图片数据
+const imageList = ref<any[]>([])
 const imageStyles = {
   border: {
     radius: '10%',
@@ -81,7 +86,8 @@ const imageStyles = {
 }
 
 /** 表单组件引用 */
-const formComponentRef = ref()
+const idlePageRef = ref()
+const postPageRef = ref()
 
 // ==================== 事件处理 ====================
 
@@ -90,13 +96,20 @@ function handleTypeChange(type: 'idle' | 'post') {
   publishType.value = type
   // 切换类型时清空图片
   images.value = []
+  imageList.value = []
 }
 
+/** 图片选择回调 */
+const handleImageSelect = (env: any) => {
+  imageList.value = [...imageList.value, env.tempFilePaths[0]]
+}
 /** 提交发布 - 委托给子组件处理 */
-async function handleSubmit() {
-  if (formComponentRef.value && formComponentRef.value.submit) {
-    await formComponentRef.value.submit(images.value)
+const handleSubmit = async () => {
+  const child = publishType.value === 'idle' ? idlePageRef.value : postPageRef.value
+  if (!child?.submit) {
+    return uni.showToast({ title: '请先完成表单', icon: 'none' })
   }
+  await child.submit(imageList.value)
 }
 </script>
 

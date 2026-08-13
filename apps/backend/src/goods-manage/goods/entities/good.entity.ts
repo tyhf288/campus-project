@@ -29,10 +29,6 @@ export class Good {
   @Property({ type: 'decimal', precision: 10, scale: 2 })
   price: number
 
-  // 原价（标价参考）
-  @Property({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  originalPrice: number | null
-
   // 成色
   @Enum({ items: () => Object.values(GoodsQuality), fieldName: 'quality' })
   quality: GoodsQuality
@@ -42,32 +38,37 @@ export class Good {
   place: string | null
 
   // 商品状态
-  @Enum({ items: () => Object.values(GoodsStatus), default: 'pending', fieldName: 'status' })
-  status: GoodsStatus = GoodsStatus.PENDING
+  @Enum({
+    items: () => Object.values(GoodsStatus),
+    default: 'pending',
+    fieldName: 'status',
+    nullable: true,
+  })
+  status?: GoodsStatus = GoodsStatus.PENDING
 
   // 审核驳回原因
-  @Property({ type: 'varchar', length: 256, fieldName: 'reject_reason' })
-  rejectReason: string
+  @Property({ type: 'varchar', length: 256, fieldName: 'reject_reason', nullable: true })
+  rejectReason?: string | null
 
   // 浏览量
-  @Property({ type: 'int', default: 0, fieldName: 'view_count' })
-  viewCount: number = 0
+  @Property({ type: 'int', default: 0, fieldName: 'view_count', nullable: true })
+  viewCount?: number = 0
 
   // 收藏人数（冗余字段）
-  @Property({ type: 'int', default: 0, fieldName: 'collect_count' })
-  collectCount: number = 0
+  @Property({ type: 'int', default: 0, fieldName: 'collect_count', nullable: true })
+  collectCount?: number = 0
 
   // 留言条数（冗余字段）
-  @Property({ type: 'int', default: 0, fieldName: 'message_count' })
-  messageCount: number = 0
+  @Property({ type: 'int', default: 0, fieldName: 'message_count', nullable: true })
+  messageCount?: number = 0
 
   // 是否置顶推荐
-  @Property({ type: 'boolean', default: false, fieldName: 'is_top' })
-  isTop: boolean = false
+  @Property({ type: 'boolean', default: false, fieldName: 'is_top', nullable: true })
+  isTop?: boolean = false
 
   // 发布时间
   @Property({ type: 'timestamptz', defaultRaw: 'now()', fieldName: 'create_at' })
-  createAt: Date = new Date()
+  createAt?: Date = new Date()
 
   // 更新时间
   @Property({
@@ -75,5 +76,5 @@ export class Good {
     onUpdate: () => new Date(),
     fieldName: 'update_at',
   })
-  updateAt: Date = new Date()
+  updateAt?: Date = new Date()
 }

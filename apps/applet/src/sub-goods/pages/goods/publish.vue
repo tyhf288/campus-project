@@ -37,19 +37,19 @@
       <!-- 分色选择 & 匿名选择 -->
       <view class="form-row">
         <view class="form-col">
-          <uni-forms-item label="分类选择" name="category">
+          <uni-forms-item label="分类" name="category">
             <uni-data-select
               v-model="form.category"
               :localdata="categoryOptions"
-              placeholder="教材选择"
+              placeholder="分类选择"
             />
           </uni-forms-item>
         </view>
 
         <view class="form-col">
-          <uni-forms-item label="是否匿名" name="anonymous">
+          <uni-forms-item label="匿名" name="isAnonymous">
             <uni-data-select
-              v-model="form.anonymous"
+              v-model="form.isAnonymous"
               :localdata="[
                 { value: 'true', text: '匿名' },
                 { value: 'false', text: '不匿名' },
@@ -61,20 +61,20 @@
       </view>
 
       <!-- 交易地点 -->
-      <uni-forms-item label="交易地点" name="location">
-        <uni-easyinput v-model="form.location" placeholder="请输入交易地点" :clearable="true" />
+      <uni-forms-item label="交易地点" name="place">
+        <uni-easyinput v-model="form.place" placeholder="请输入交易地点" :clearable="true" />
       </uni-forms-item>
 
       <!-- 商品描述 -->
-      <uni-forms-item label="商品描述" name="description">
+      <uni-forms-item label="商品描述" name="desc">
         <uni-easyinput
-          v-model="form.description"
+          v-model="form.desc"
           type="textarea"
           placeholder="补充说明商品情况"
           :maxlength="500"
           :autoHeight="true"
         />
-        <view class="word-count"> {{ (form.description || '').length }}/500 </view>
+        <view class="word-count"> {{ (form.desc || '').length }}/500 </view>
       </uni-forms-item>
     </view>
   </uni-forms>
@@ -100,13 +100,12 @@ const formRef = ref()
 const form = reactive({
   title: '',
   price: '',
-  quality: GoodsQuality.NORMAL,
-  color: '',
+  quality: '',
+  desc: '',
   category: '',
   materials: '',
-  location: '',
-  description: '',
-  anonymous: 'false',
+  place: '',
+  isAnonymous: 'false',
 })
 
 /** 表单校验规则 */
@@ -189,12 +188,13 @@ async function submit(images: string[]) {
     // 调用创建商品接口
     await createGoods({
       title: form.title,
-      description: form.description,
+      desc: form.desc,
       price: Number(form.price),
       quality: form.quality,
       categoryId: form.category ? parseInt(form.category) : 1,
       images: imageUrls,
-      anonymous: form.anonymous === 'true',
+      isAnonymous: form.isAnonymous === 'true',
+      place: form.place,
     })
 
     uni.showToast({ title: '发布成功', icon: 'success' })

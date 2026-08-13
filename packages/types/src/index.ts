@@ -22,4 +22,12 @@ export type { BlackVO } from './vo/black.vo'
 
 //商品列表相关
 export { GoodsStatus, GoodsQuality } from './enum/goods.enum'
-export type { GoodsCreate } from './api/good.api'
+export type {
+  GoodsCreate,
+  GoodFilterGet,
+  GoodUpdate,
+  GoodAudit,
+  CategoryCreate,
+  CategoryUpdate,
+} from './api/good.api'
+export type { GoodVO, ImageVO, CategoryVO, AuditLockVO } from './vo/goods.vo'

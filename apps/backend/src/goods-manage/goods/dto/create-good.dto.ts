@@ -20,7 +20,7 @@ export class CreateGoodDto implements GoodsCreate {
 
   @ApiProperty({ description: '商品描述' })
   @IsString()
-  description: string
+  desc: string
 
   @ApiProperty({ description: '售价（单位：元）' })
   @IsNumber()
@@ -45,13 +45,13 @@ export class CreateGoodDto implements GoodsCreate {
   @ApiPropertyOptional({ description: '是否匿名' })
   @IsOptional()
   @IsBoolean()
-  anonymous?: boolean
+  isAnonymous?: boolean
 
   @ApiPropertyOptional({ description: '交易地点' })
   @IsOptional()
   @IsString()
   @MaxLength(128)
-  location?: string
+  place?: string
 
   @ApiPropertyOptional({ description: '原价（可选）' })
   @IsOptional()
