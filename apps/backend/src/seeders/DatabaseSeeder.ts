@@ -1,14 +1,13 @@
 import type { EntityManager } from '@mikro-orm/core'
 import { Seeder } from '@mikro-orm/seeder'
-import { UserFactory } from './UserFactory'
-import { User } from '../users/entities/user.entity'
+import { GoodsFactory } from './GoodsFactory'
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
-    // ⚠️ 注意: 以下操作会删除现有数据,仅用于开发/测试环境
-    // await em.nativeDelete(Todo, {})
-    // await em.nativeDelete(User, {})
-    //创建模拟数据，现用现加
-    // new UserFactory(em).make(10)
+    // 新增 100 条商品模拟数据（不删除任何现有数据）
+    // ⚠️ 前置条件：
+    //   1. user 表需存在 id 1~20 的用户
+    //   2. category 表需存在 id 1~8 的分类
+    await new GoodsFactory(em).create(100)
   }
 }

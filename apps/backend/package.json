@@ -23,7 +23,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migration:create": "mikro-orm migration:create",
     "migration:up": "mikro-orm migration:up",
-    "migration:seeder": "mikro-orm seeder:run"
+    "migration:seeder": "mikro-orm seeder:run --config src/mikro-orm.config.ts"
   },
   "dependencies": {
     "@campus/eslint-config": "workspace:*",

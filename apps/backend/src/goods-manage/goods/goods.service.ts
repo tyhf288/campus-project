@@ -84,7 +84,8 @@ export class GoodsService {
     }
 
     const [list, total] = await this.goodRepository.findAndCount(where, {
-      orderBy: { createAt: 'DESC' },
+      // createAt 相同时（种子数据批量插入同一时间戳）用 id 兜底，保证分页顺序稳定、不重复
+      orderBy: { createAt: 'DESC', id: 'DESC' },
       limit: pageSize,
       offset: (page - 1) * pageSize,
     })
