@@ -22,21 +22,27 @@ export const useAdminStore = defineStore(
       state.user = user
       localStorage.setItem('admin', JSON.stringify(state))
     }
-    //登录后只设置侧边栏菜单，路由菜单由路由守卫添加
+    // 注册路由菜单到 router（幂等，重复调用安全）
+    const registerRoutes = (menu: MenuItem[]) => {
+      const routes = addMenu(menu)
+      routes.forEach((item) => {
+        if (!router.hasRoute(item.name as string)) {
+          router.addRoute('layout', item)
+        }
+      })
+    }
+
+    //登录后设置侧边栏菜单，并同步注册路由
     const setMenu = () => {
       const filteredMenu = filterMenuByRoute(fullMenu, state.role as UserRole)
       state.menu = filteredMenu
+      registerRoutes(filteredMenu)
     }
 
-    //设置路由菜单
+    //设置路由菜单（页面刷新后从持久化菜单恢复路由）
     const init = () => {
       if (state.menu && state.menu.length > 0) {
-        const addMenuToRouter = addMenu(state.menu) //路由菜单不能是响应式结构
-        addMenuToRouter.forEach((item) => {
-          if (!router.hasRoute(item.name as string)) {
-            router.addRoute('layout', item)
-          }
-        })
+        registerRoutes(state.menu)
       } else {
         setMenu()
       }

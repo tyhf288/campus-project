@@ -19,6 +19,7 @@ import { UnbanProcessor } from './unban.processor'
       redis: {
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT || '6379'),
+        password: process.env.REDIS_PASSWORD || undefined,
       },
       // 全局默认配置
       defaultJobOptions: {
