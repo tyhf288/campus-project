@@ -1,0 +1,71 @@
+services:
+  # ===== PostgreSQL =====
+  db:
+    image: postgres:15-alpine
+    container_name: campus-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: campus
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d campus']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ===== Redis =====
+  redis:
+    image: redis:7.2-alpine
+    container_name: campus-redis
+    restart: unless-stopped
+    command: redis-server --requirepass 123456
+    ports:
+      - '6379:6379'
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', '--no-auth-warning', '-a', '123456', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ===== 后端 NestJS =====
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: campus-backend
+    restart: unless-stopped
+    env_file:
+      - apps/backend/.env.docker
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - '3000:3000'
+
+  # ===== 前端 Nginx =====
+  web:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    container_name: campus-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '80:80'
+
+volumes:
+  pgdata:
+  redisdata:

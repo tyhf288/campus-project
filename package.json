@@ -10,7 +10,8 @@
     "lint:fix": "turbo lint:fix",
     "type-check": "turbo type-check",
     "dev": "turbo dev",
-    "build": "turbo build"
+    "build": "turbo build",
+    "packageManager": "pnpm@11.9.0"
   },
   "devEngines": {
     "packageManager": {

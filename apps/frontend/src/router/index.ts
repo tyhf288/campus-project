@@ -36,7 +36,6 @@ let isRoutesInitialized = false
 
 router.beforeEach(async (to) => {
   const adminStore = useAdminStore()
-
   // 如果路由还未初始化，先初始化
   if (!isRoutesInitialized) {
     adminStore.init()
