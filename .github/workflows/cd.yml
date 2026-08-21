@@ -43,9 +43,11 @@ jobs:
           context: . # monorepo 必须用根目录做上下文
           file: apps/backend/Dockerfile # 指定 Dockerfile
           push: true # 构建完直接推送
+          # 固定 latest 标签
+          # 用 commit hash 做版本标签
           tags: |
-            ${{ env.BACKEND_IMAGE }}:latest          # 固定 latest 标签
-            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}  # 用 commit hash 做版本标签
+            ${{ env.BACKEND_IMAGE }}:latest
+            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
 
       # ⑤ 构建 + 推送前端镜像
       - name: 构建并推送前端镜像
