@@ -1,0 +1,59 @@
+name: CD 部署流水线
+
+# 只在 push 到 main 时触发（dev 分支只做校验，不部署）
+on:
+  push:
+    branches: [main]
+
+# 全局变量：镜像仓库地址
+env:
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ghcr.io/${{ github.repository }}/backend
+  FRONTEND_IMAGE: ghcr.io/${{ github.repository }}/frontend
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    # 关键：允许推送镜像到 GHCR（默认是只读）
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # ① 拉取代码
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # ② 配置 Docker Buildx（多平台构建加速）
+      - name: 配置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # ③ 登录 GHCR（用 GitHub 自带的 token，无需额外账号）
+      - name: 登录 GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # ④ 构建 + 推送后端镜像
+      - name: 构建并推送后端镜像
+        uses: docker/build-push-action@v6
+        with:
+          context: . # monorepo 必须用根目录做上下文
+          file: apps/backend/Dockerfile # 指定 Dockerfile
+          push: true # 构建完直接推送
+          tags: |
+            ${{ env.BACKEND_IMAGE }}:latest          # 固定 latest 标签
+            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}  # 用 commit hash 做版本标签
+
+      # ⑤ 构建 + 推送前端镜像
+      - name: 构建并推送前端镜像
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/frontend/Dockerfile
+          push: true
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:latest
+            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
